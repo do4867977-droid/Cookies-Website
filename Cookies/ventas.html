@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Cómo pedir por WhatsApp — Cookie Duo</title>
+<meta name="description" content="Instrucciones simples para hacer pedidos de galletas por WhatsApp con Cookie Duo." />
+<style>
+  /* ========= Theme variables (light by default) ========= */
+  :root{
+    --bg: #f3f8ff;
+    --card: rgba(255,255,255,0.96);
+    --primary-dark: #042a66;
+    --primary: #0b6bf0;
+    --accent: #64b6ff;
+    --muted: #376a9a;
+    --radius: 12px;
+    --shadow: 0 12px 32px rgba(11,107,240,0.08);
+    --text-on-primary: #ffffff;
+    --logo-overlay: 0.30;
+    --logo-overlay-color: 0,0,0;
+    --max: 1100px;
+
+    /* small UI */
+    --control-bg: #ffffff;
+    --control-border: rgba(11,107,240,0.06);
+
+    --gap: 16px;
+    --base-font: 16px;
+  }
+
+  /* ========= Dark theme (overrides) ========= */
+  :root.dark, :root[data-theme="dark"] {
+    --bg: #0b1220;
+    --card: rgba(8,14,26,0.72);
+    --primary-dark: #e6f0ff;
+    --primary: #3ea0ff;
+    --accent: #6fc3ff;
+    --muted: #9fbfe6;
+    --shadow: 0 10px 30px rgba(0,0,0,0.6);
+    --text-on-primary: #04243f;
+    --logo-overlay: 0.36;
+    --logo-overlay-color: 0,0,0;
+    --control-bg: rgba(255,255,255,0.04);
+    --control-border: rgba(255,255,255,0.06);
+  }
+
+  /* ========== Base ========== */
+  *,*::before,*::after{box-sizing:border-box}
+  html,body{height:100%;font-size:var(--base-font)}
+  body{
+    margin:0;font-family:Inter,system-ui,Arial,sans-serif;color:var(--primary-dark);
+    -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+    line-height:1.45;display:flex;justify-content:center;padding:28px;
+    background: var(--bg);
+    transition: background-color 260ms ease, color 260ms ease;
+  }
+
+  .wrap{width:100%;max-width:var(--max);padding:0 18px}
+  a{color:inherit;text-decoration:none}
+
+  /* ========== Header ========== */
+  header{
+    display:flex;
+    gap:var(--gap);
+    align-items:center;
+    margin-bottom:20px;
+    width:100%;
+  }
+  .leftHeader{display:flex;gap:14px;align-items:center;flex:1;min-width:0}
+  .logo{
+    width:80px;height:80px;border-radius:14px;overflow:hidden;flex:0 0 80px;
+    box-shadow:var(--shadow);position:relative;display:inline-grid;place-items:center;
+    background-image: url("/mnt/data/cookies.jpg");
+    background-size: cover;background-position:center;border:3px solid rgba(255,255,255,0.12);
+    transition: box-shadow 260ms ease, border-color 260ms ease;
+  }
+  .logo img{width:100%;height:100%;object-fit:cover;display:block}
+  .logo::after{
+    content:'';position:absolute;inset:0;background:rgba(var(--logo-overlay-color),var(--logo-overlay));
+    pointer-events:none;transition: background-color 220ms ease, opacity 220ms ease;
+  }
+
+  .titleWrap{min-width:0}
+  h1{margin:0;font-size:1.25rem;color:var(--primary-dark);line-height:1.1;word-break:break-word;transition:color 260ms ease}
+  p.lead{margin:6px 0 0;color:var(--muted);font-size:0.95rem;transition:color 260ms ease}
+
+  .breadcrumbs{margin-top:8px;margin-bottom:0;color:var(--muted);font-size:0.95rem;display:flex;gap:10px;flex-wrap:wrap}
+  .breadcrumbs a{color:var(--primary);font-weight:700;cursor:pointer}
+
+  /* Theme toggle & overlay controls */
+  .controls{display:flex;gap:8px;align-items:center}
+  .theme-toggle{
+    display:inline-flex;align-items:center;gap:8px;padding:8px 10px;border-radius:10px;
+    background:var(--control-bg);border:1px solid var(--control-border);cursor:pointer;font-weight:700;
+    color:var(--primary-dark);
+    transition:background 220ms ease,border-color 220ms ease,color 220ms ease;
+  }
+  .logo-controls{display:flex;gap:8px;align-items:center;margin-left:6px}
+  .logo-controls button{padding:6px 8px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:var(--control-bg);cursor:pointer;font-size:0.88rem}
+
+  /* ========== Layout / Cards ========== */
+  .grid{display:grid;grid-template-columns:1fr 360px;gap:18px;width:100%}
+  .card{background:var(--card);padding:18px;border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid rgba(11,107,240,0.06);transition:background 260ms ease,box-shadow 260ms ease,border-color 260ms ease}
+  .card h2{margin:0 0 8px;color:var(--primary-dark);font-size:1.1rem}
+  .section-title{display:flex;align-items:center;gap:10px}
+  .k{font-weight:800;color:var(--primary-dark)}
+
+  /* steps */
+  .steps{display:flex;flex-direction:column;gap:12px}
+  .step{padding:12px;border-radius:10px;background:linear-gradient(180deg,#ffffff,#f7fbff);border:1px solid rgba(11,107,240,0.03);transition:background 260ms ease,border-color 260ms ease}
+  :root.dark .step{background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.03)}
+  .step strong{display:block;margin-bottom:6px;color:var(--primary-dark)}
+  .small{font-size:0.95rem;color:var(--muted)}
+
+  .example{background:#f8fbff;border-radius:8px;padding:10px;border:1px dashed rgba(11,107,240,0.12);font-family:monospace;white-space:pre-wrap;margin-top:8px;color:var(--primary-dark);font-size:0.95rem;transition:background 260ms ease,color 260ms ease}
+  :root.dark .example{background:rgba(255,255,255,0.02); border-style:dashed; border-color: rgba(255,255,255,0.06)}
+
+  /* buttons */
+  .btn{display:inline-flex;gap:8px;align-items:center;padding:10px 14px;border-radius:10px;background:linear-gradient(90deg,var(--primary),var(--accent));color:var(--text-on-primary);text-decoration:none;font-weight:800;border:none;cursor:pointer;transition:transform 160ms ease}
+  .btn:active{transform:scale(.99)}
+  .btn svg{opacity:0.95}
+  .btn-ghost{background:transparent;border:1px solid rgba(11,107,240,0.12);color:var(--primary-dark);padding:8px 12px;border-radius:10px}
+  .actions-row{display:flex;gap:8px;flex-wrap:wrap}
+
+  ul.check{padding-left:1rem;margin:8px 0}
+  ul.check li{margin:6px 0;color:var(--muted)}
+
+  .pill{background:linear-gradient(90deg,#ffffff,#f7fbff);padding:10px;border-radius:10px;border:1px solid rgba(11,107,240,0.04);color:var(--primary-dark)}
+  :root.dark .pill{background:rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.04)}
+  .muted{color:var(--muted);font-size:0.95rem}
+
+  footer{margin-top:18px;text-align:center;color:var(--muted);font-size:0.92rem}
+
+  /* focus outlines for accessibility */
+  :focus{outline:3px solid rgba(11,107,240,0.12);outline-offset:3px;border-radius:8px}
+  button:focus{outline-offset:2px}
+
+  /* ========== Responsive ========== */
+  @media (max-width:1100px){
+    .grid{grid-template-columns:1fr 320px}
+    .logo{width:72px;height:72px;flex:0 0 72px}
+  }
+
+  @media (max-width:880px){
+    body{padding:18px}
+    header{flex-direction:column;align-items:flex-start;gap:12px}
+    .leftHeader{width:100%}
+    .logo-controls{margin-left:0;margin-top:6px}
+    .grid{grid-template-columns:1fr; gap:14px}
+    .card{padding:14px}
+    .logo{width:64px;height:64px}
+    .titleWrap{margin-left:0}
+    /* collapse controls into a single line on mobile */
+    .controls{width:100%;justify-content:space-between;gap:10px}
+  }
+
+  @media (max-width:520px){
+    body{padding:12px}
+    h1{font-size:1.05rem}
+    p.lead{font-size:0.92rem}
+    .logo{width:56px;height:56px}
+    .btn{width:100%;justify-content:center}
+    .btn-ghost{width:100%}
+    .actions-row{flex-direction:column}
+    .example{font-size:0.9rem}
+    .logo-controls{display:flex;gap:6px;flex-wrap:wrap}
+    .theme-toggle{padding:8px}
+  }
+
+  @media (min-width:1100px){
+    aside.card{position:sticky;top:20px;height:fit-content}
+  }
+</style>
+</head>
+<body>
+  <main class="wrap" role="main" aria-labelledby="title">
+    <header>
+      <div class="leftHeader">
+        <div class="logo" aria-hidden="false" title="Cookie Duo logo">
+          <img src="cookies.jpg" alt="Cookie Duo — logo">
+        </div>
+
+        <div class="titleWrap">
+          <h1 id="title">Pedir por WhatsApp — guía rápida para clientes</h1>
+          <p class="lead">Haz tu pedido en 3 minutos: qué enviar, métodos de pago, tiempos y qué esperar.</p>
+
+          <nav class="breadcrumbs" aria-label="Ubicación">
+            <a href="#como-pedir" onclick="event.preventDefault(); scrollToSection('como-pedir')">¿Cómo pedir?</a>
+            <span aria-hidden="true">·</span>
+            <a href="#" onclick="event.preventDefault(); copyText('#tpl'); openWhatsAppFromTemplate()">Plantilla</a>
+            <span aria-hidden="true">·</span>
+            <a href="#envio" onclick="event.preventDefault(); scrollToSection('envio')">Envíos y pagos</a>
+          </nav>
+        </div>
+      </div>
+
+      <div class="controls" role="region" aria-label="Controles">
+        <div class="logo-controls" aria-hidden="false" title="Controles de overlay">
+          <label style="font-size:0.9rem;color:var(--muted);margin-right:6px">Overlay</label>
+          <button onclick="setLogoOverlay(0.10)" title="Ligero" aria-label="Overlay ligero">Ligero</button>
+          <button onclick="setLogoOverlay(0.30)" title="Medio" aria-label="Overlay medio">Medio</button>
+          <button onclick="setLogoOverlay(0.60)" title="Oscuro" aria-label="Overlay oscuro">Oscuro</button>
+        </div>
+
+        <button id="themeToggle" class="theme-toggle" aria-pressed="false" aria-label="Alternar modo claro u oscuro">
+          <svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false">
+            <circle cx="12" cy="12" r="5" fill="#fff"></circle>
+          </svg>
+          <span id="themeLabel">Modo oscuro</span>
+        </button>
+      </div>
+    </header>
+
+    <section class="grid" aria-label="Instrucciones para pedir por WhatsApp">
+      <!-- LEFT: instrucciones -->
+      <article class="card" id="como-pedir" aria-labelledby="comoTitle" tabindex="-1">
+        <div class="section-title">
+          <h2 id="comoTitle">Cómo pedir (paso a paso)</h2>
+        </div>
+
+        <div class="steps" aria-hidden="false">
+          <div class="step" id="step1">
+            <strong>Paso 1 — Envía un mensaje inicial</strong>
+            <div class="small">Abre WhatsApp y escribe un mensaje corto con el producto y la fecha. Te respondemos con disponibilidad y precio.</div>
+            <div class="example" aria-hidden="true">
+Hola 👋, quiero pedir Galleta Chocolate Intenso — caja 12.
+Entrega: 2025-11-22 — Bogotá (Chapinero).
+Nombre: Ana Ruiz — Tel: 300 000 0000.
+            </div>
+            <div style="margin-top:8px" class="actions-row">
+              <button class="btn" onclick="openWhatsAppSample()" aria-label="Enviar ejemplo por WhatsApp">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.95.53 3.77 1.44 5.31L2 22l4.86-1.42C8.33 21.16 10.11 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2Z" fill="#fff"/></svg>
+                Enviar mensaje de ejemplo
+              </button>
+              <button class="btn-ghost" onclick="copyExample()" aria-label="Copiar plantilla">Copiar plantilla</button>
+            </div>
+          </div>
+
+          <div class="step" id="step2">
+            <strong>Paso 2 — Confirmamos disponibilidad y precio</strong>
+            <div class="small">Recibirás precio unitario, subtotal, empaque, envío y total. Mostramos descuentos por cantidad si aplican.</div>
+          </div>
+
+          <div class="step" id="step3">
+            <strong>Paso 3 — Revisa y confirma</strong>
+            <div class="small">Confirma cantidad, dirección y fecha. Elegimos empaque y personalización si lo solicitas.</div>
+          </div>
+
+          <div class="step" id="step4">
+            <strong>Paso 4 — Pago</strong>
+            <div class="small">Aceptamos transferencia, pago por link o contra entrega (zonas seleccionadas).</div>
+            <ul class="check">
+              <li><strong>Transferencia:</strong> envía captura del comprobante.</li>
+              <li><strong>Pago por link:</strong> recibirás un enlace seguro.</li>
+              <li><strong>Contra entrega:</strong> solo en zonas seleccionadas.</li>
+            </ul>
+          </div>
+
+          <div class="step" id="step5">
+            <strong>Paso 5 — Confirmación y seguimiento</strong>
+            <div class="small">Al pagar confirmamos y te enviamos el número de pedido y la fecha de producción. Te notificamos antes del envío.</div>
+          </div>
+
+          <div class="step" id="step6">
+            <strong>Factura o logo en empaque</strong>
+            <div class="small">Indica desde el inicio NIT/CC y adjunta el logo (PDF o PNG). Tiempos y costos pueden variar.</div>
+          </div>
+        </div>
+
+        <hr style="margin:14px 0;border:none;border-top:1px solid rgba(11,107,240,0.06)">
+
+        <h2 class="k">Plantilla que puedes usar (copia y pega)</h2>
+        <div class="example" id="tpl">
+*Pedido Cookie Duo*
+Nombre: [tu nombre]
+Producto: [ej. Galleta Chocolate Intenso — caja 12]
+Cantidad: [ej. 3 cajas]
+Fecha de entrega: [YYYY-MM-DD]
+Dirección: [Ciudad, barrio, dirección exacta]
+Teléfono alternativo (opcional):
+Preferencias: [empaque, logo, tarjeta]
+        </div>
+
+        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn" onclick="copyText('#tpl')" aria-label="Copiar plantilla">Copiar plantilla</button>
+          <button class="btn" onclick="openWhatsAppFromTemplate()" aria-label="Abrir WhatsApp con plantilla">Abrir WhatsApp con plantilla</button>
+        </div>
+
+        <hr style="margin:14px 0;border:none;border-top:1px solid rgba(11,107,240,0.06)">
+
+        <h2 class="k">Preguntas frecuentes</h2>
+        <div style="margin-top:8px" class="small">
+          <strong>¿Cuánto tardan?</strong>
+          <div>Producción normal: 3–7 días hábiles. Pedidos urgentes: consultar recargo.</div>
+
+          <strong style="margin-top:8px;display:block">Devoluciones</strong>
+          <div>Si llega dañado por nuestra responsabilidad se reemplaza o reembolsa tras verificación.</div>
+
+          <strong style="margin-top:8px;display:block">Entrega</strong>
+          <div>Mensajería asociada o entrega propia según zona. Recibirás seguimiento.</div>
+        </div>
+      </article>
+
+      <!-- RIGHT: contacto -->
+      <aside class="card" aria-labelledby="contactTitle">
+        <h2 id="contactTitle">Contacta por WhatsApp</h2>
+        <p class="muted">Haz clic para abrir WhatsApp (app o Web). El mensaje se pre-llenará con la plantilla.</p>
+
+        <div style="margin:12px 0;display:flex;gap:8px;flex-direction:column">
+          <button class="btn" onclick="openWhatsAppFromTemplate()" aria-label="Enviar plantilla por WhatsApp">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.95.53 3.77 1.44 5.31L2 22l4.86-1.42C8.33 21.16 10.11 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2Z" fill="#fff"/></svg>
+            Enviar plantilla por WhatsApp
+          </button>
+
+          <div class="pill">
+            <strong>Teléfono / WhatsApp</strong>
+            <div class="muted" style="margin-top:6px">+57 301 2548388</div>
+          </div>
+
+          <div class="pill">
+            <strong id="envio">Horarios de atención</strong>
+            <div class="muted" style="margin-top:6px">Lun–Vie 8:00–18:00 · Sábados 9:00–14:00</div>
+          </div>
+
+          <div class="pill">
+            <strong>Métodos de pago</strong>
+            <ul class="muted" style="margin:8px 0 0;padding-left:1rem">
+              <li>Transferencia / Nequi / Daviplata</li>
+              <li>Pago por link (tarjeta)</li>
+              <li>Contra entrega (zonas seleccionadas)</li>
+            </ul>
+          </div>
+
+          <div class="pill">
+            <strong>¿Alergias o requerimientos?</strong>
+            <div class="muted" style="margin-top:6px">Indícalo siempre en el pedido (gluten, frutos secos, etc.).</div>
+          </div>
+        </div>
+
+        <hr style="margin:12px 0;border:none;border-top:1px solid rgba(11,107,240,0.06)">
+
+        <h3 class="k">Antes de enviar</h3>
+        <ul class="muted" style="padding-left:1rem;margin-top:8px">
+          <li>Revisa dirección y horario.</li>
+          <li>Ten listo comprobante si vas a transferir.</li>
+          <li>Si es regalo, escribe el mensaje para la tarjeta.</li>
+        </ul>
+      </aside>
+    </section>
+
+    <footer>
+      <p>¿Necesitas ayuda? Envía un WhatsApp con la palabra <strong>AYUDA</strong> y te guiamos paso a paso.</p>
+    </footer>
+  </main>
+
+<script>
+  const BUSINESS_NUMBER = '573012548388';
+
+  function openWhatsAppSample(){
+    const sample = [
+      'Hola 👋, quisiera consultar disponibilidad.',
+      'Producto: Galleta Chocolate Intenso — caja 12',
+      'Cantidad: 2 cajas',
+      'Fecha de entrega: 2025-11-22',
+      'Dirección: Bogotá, Chapinero',
+      'Nombre: Ana Ruiz',
+    ].join('\\n');
+    const url = 'https://wa.me/' + BUSINESS_NUMBER + '?text=' + encodeURIComponent(sample);
+    window.open(url,'_blank','noopener');
+  }
+
+  function copyExample(){
+    const el = document.querySelector('.example');
+    if(!el) return;
+    const text = el.textContent.trim();
+    navigator.clipboard.writeText(text).then(()=>{ alert('Plantilla copiada al portapapeles.'); }, ()=>{ alert('No se pudo copiar automáticamente — selecciona y copia manualmente.'); });
+  }
+
+  function copyText(selector){
+    const el = (typeof selector === 'string') ? document.querySelector(selector) : selector;
+    if(!el) return;
+    const text = el.textContent.trim();
+    navigator.clipboard.writeText(text).then(()=>{ alert('Plantilla copiada al portapapeles.'); }, ()=>{ alert('No se pudo copiar automáticamente — selecciona y copia manualmente.'); });
+  }
+
+  function openWhatsAppFromTemplate(){
+    const tpl = document.getElementById('tpl').textContent.trim();
+    const url = 'https://wa.me/' + BUSINESS_NUMBER + '?text=' + encodeURIComponent(tpl);
+    window.open(url,'_blank','noopener');
+  }
+
+  /* cambia la opacidad del overlay (0..1) */
+  function setLogoOverlay(value){
+    document.documentElement.style.setProperty('--logo-overlay', String(value));
+  }
+
+  // desplaza suavemente a la sección y le da foco (para accesibilidad)
+  function scrollToSection(id){
+    const el = document.getElementById(id);
+    if(!el) return;
+    el.scrollIntoView({behavior:'smooth',block:'start'});
+    setTimeout(()=>{ el.focus({preventScroll:true}); }, 420);
+  }
+
+  /* ===== Theme toggle logic =====
+     - guarda elección en localStorage 'site-theme' = 'light'|'dark'
+     - si no hay elección, respeta prefers-color-scheme
+  */
+  const themeToggleBtn = document.getElementById('themeToggle');
+  const themeLabel = document.getElementById('themeLabel');
+  const themeIcon = document.getElementById('themeIcon');
+
+  function applyTheme(theme){
+    const root = document.documentElement;
+    if(theme === 'dark'){
+      root.classList.add('dark');
+      root.setAttribute('data-theme','dark');
+      themeToggleBtn.setAttribute('aria-pressed','true');
+      themeLabel.textContent = 'Modo claro';
+      themeIcon.innerHTML = '<path d=\"M21 12.79A9 9 0 0111.21 3 7 7 0 1021 12.79z\" fill=\"#fff\"/>';
+    } else {
+      root.classList.remove('dark');
+      root.removeAttribute('data-theme');
+      themeToggleBtn.setAttribute('aria-pressed','false');
+      themeLabel.textContent = 'Modo oscuro';
+      themeIcon.innerHTML = '<path d=\"M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zM1 13h3v-2H1v2zm10 8h2v-3h-2v3zm7-3.16l1.8 1.79 1.41-1.41-1.79-1.8-1.42 1.42zM17 13a5 5 0 11-10 0 5 5 0 0110 0zm-5-9h2V1h-2v3zM4.22 19.78l1.79-1.8-1.41-1.41-1.8 1.79 1.42 1.42zM23 11v2h-3v-2h3z\" fill=\"#04243f\"/>';
+    }
+  }
+
+  function getPreferredTheme(){
+    const saved = localStorage.getItem('site-theme');
+    if(saved === 'dark' || saved === 'light') return saved;
+    const mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    return mq ? 'dark' : 'light';
+  }
+
+  function toggleTheme(){
+    const current = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    localStorage.setItem('site-theme', next);
+  }
+
+  // init theme on load
+  (function initTheme(){
+    const initial = getPreferredTheme();
+    applyTheme(initial);
+  })();
+
+  // click listener
+  themeToggleBtn.addEventListener('click', toggleTheme);
+  themeToggleBtn.addEventListener('keyup', (e)=>{ if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleTheme(); } });
+
+  // overlay initial
+  setLogoOverlay(0.30);
+
+  // improve UX on small screens: close virtual keyboard on link open (mobile)
+  function openWhatsAppAndBlur(url){
+    window.open(url,'_blank','noopener');
+    try{ document.activeElement.blur(); }catch(e){}
+  }
+</script>
+</body>
+</html>
+
+
+

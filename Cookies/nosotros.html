@@ -1,0 +1,720 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cookie Duo — Inicio</title>
+  <meta name="description" content="Cookie Duo — galletas artesanales con enfoque corporativo. Carta, pedidos y contacto." />
+  <meta name="color-scheme" content="light dark">
+  <style>
+    /* ========================
+       Variables (light by default)
+       ======================== */
+    :root{
+      --max-w:1200px;
+      --gap:1rem;
+
+      /* color palette (light) */
+      --bg:#f6fbff;
+      --card-grad: linear-gradient(180deg,#ffffff,#f2f7ff);
+      --text:#042a66;
+      --muted:#2b597f;
+      --accent-1:#0b6bf0;
+      --accent-2:#0a5ad6;
+      --muted-plate: rgba(11,111,240,0.04);
+
+      --wa-green-1:#25D366;
+      --wa-green-2:#128C7E;
+
+      --radius:12px;
+      --shadow-1:0 8px 24px rgba(4,42,102,0.06);
+      --shadow-2:0 18px 36px rgba(11,107,240,0.12);
+      --touch-min:44px;
+      --nav-height:64px;
+
+      /* UI helpers */
+      --text-on-accent: #ffffff;
+      --control-bg: rgba(255,255,255,0.96);
+      --control-border: rgba(11,107,240,0.06);
+
+      /* PANEL: use a solid bg (will be overridden in dark) */
+      --panel-bg: #ffffff;
+    }
+
+    /* ========================
+       Dark theme overrides
+       ======================== */
+    :root.dark, :root[data-theme="dark"] {
+      --bg: #071022;
+      --card-grad: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+      --text: #dbeeff;
+      --muted: #9fbfe6;
+      --accent-1: #3ea0ff;
+      --accent-2: #64b6ff;
+      --muted-plate: rgba(255,255,255,0.03);
+
+      --wa-green-1:#128C7E; /* slightly darker */
+      --wa-green-2:#0b6b54;
+
+      --control-bg: rgba(255,255,255,0.04);
+      --control-border: rgba(255,255,255,0.06);
+
+      --shadow-1: 0 10px 28px rgba(0,0,0,0.6);
+      --shadow-2: 0 20px 40px rgba(0,0,0,0.6);
+      --text-on-accent: #04243f;
+
+      /* panel solid in dark */
+      --panel-bg: #071428;
+    }
+
+    /* ========================
+       Reset / Base
+       ======================== */
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+      background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;line-height:1.45;display:flex;flex-direction:column;min-height:100vh;
+      -webkit-tap-highlight-color: transparent;transition:background-color 220ms ease,color 220ms ease;
+    }
+    img{max-width:100%;display:block;height:auto}
+    a{color:inherit}
+    button{font-family:inherit}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+    /* ========================
+       Container & layout
+       ======================== */
+    .container{width:100%;max-width:var(--max-w);margin:0 auto;padding:0 1rem}
+    main{padding:1rem 0 2rem}
+
+    /* ========================
+       NAVBAR
+       ======================== */
+    nav.nav{
+      background:var(--control-bg);
+      border-bottom:1px solid var(--control-border);
+      position:sticky;top:0;z-index:120;box-shadow:var(--shadow-1);
+      backdrop-filter: blur(4px);transition:background 220ms ease,border-color 220ms ease;
+    }
+    .nav-inner{
+      display:flex;align-items:center;justify-content:space-between;gap:var(--gap);
+      padding:0.6rem 1rem;max-width:var(--max-w);margin:0 auto;height:var(--nav-height);
+    }
+    .brand{display:flex;gap:0.75rem;align-items:center;min-width:0}
+    .brand img{width:48px;height:48px;border-radius:10px;object-fit:cover;box-shadow:0 6px 14px rgba(4,42,102,0.06)}
+    .brand h1{margin:0;font-size:clamp(1rem,1.6vw,1.05rem);color:var(--text);font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .nav-links{display:flex;gap:1rem;align-items:center}
+    .nav-links a{padding:0.4rem 0.65rem;border-radius:8px;font-weight:700;color:var(--accent-1);white-space:nowrap}
+    .nav-links a:focus{outline:3px solid rgba(11,107,240,0.14);outline-offset:3px}
+    .cta-primary{background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:var(--text-on-accent);padding:0.5rem 0.95rem;border-radius:10px;font-weight:800;border:none;cursor:pointer;min-height:var(--touch-min)}
+    .menu-toggle{display:none;background:transparent;border:none;font-size:22px;padding:8px;border-radius:8px;cursor:pointer}
+    .menu-toggle:focus{outline:3px solid rgba(11,107,240,0.14);outline-offset:3px}
+
+    .theme-toggle{
+      display:inline-flex;align-items:center;gap:8px;padding:8px;border-radius:10px;background:var(--control-bg);border:1px solid var(--control-border);cursor:pointer;color:var(--text);font-weight:700;
+      transition:background 200ms ease,border-color 200ms ease,color 200ms ease;
+    }
+    .theme-toggle svg{width:18px;height:18px;display:block}
+
+    /* ========================
+       HERO
+       ======================== */
+    .hero{display:grid;grid-template-columns:1fr 360px;gap:1rem;align-items:start;margin:1.25rem 0}
+    .hero-card{background:var(--card-grad);border-radius:var(--radius);padding:1.2rem;box-shadow:var(--shadow-1);border:1px solid var(--muted-plate);transition:background 220ms ease,border-color 220ms ease}
+    .hero h2{margin:0 0 0.5rem;color:var(--text);font-size:clamp(1.2rem,2.8vw,1.6rem)}
+    .hero p{margin:0;color:var(--muted)}
+
+    /* ========================
+       Slider
+       ======================== */
+    .slider-wrap{margin-top:1rem;position:relative}
+    .slider-toggle{position:absolute;right:8px;top:8px;background:var(--accent-1);color:var(--text-on-accent);border:none;width:40px;height:40px;border-radius:10px;display:inline-grid;place-items:center;cursor:pointer;box-shadow:var(--shadow-2);font-weight:800}
+    .slider{display:flex;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:0.6rem;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
+    .slide{flex:0 0 min(320px,86%);background:var(--control-bg);border-radius:12px;padding:1rem;box-shadow:var(--shadow-1);scroll-snap-align:center;border:1px solid var(--muted-plate);min-width:260px;transition:background 220ms ease,border-color 220ms ease}
+    .slide h3{margin:0 0 0.4rem;font-size:1.05rem;color:var(--text)}
+    .slide p{margin:0 0 0.6rem;color:var(--muted)}
+    .actions{display:flex;gap:0.5rem}
+    .btn{padding:0.5rem 0.8rem;border-radius:10px;border:none;font-weight:800;cursor:pointer;min-height:var(--touch-min)}
+    .btn-outline{background:transparent;border:1px solid rgba(11,111,240,0.12);color:var(--text)}
+    .btn-primary{background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:var(--text-on-accent);box-shadow:0 8px 22px rgba(11,107,240,0.08)}
+
+    .slider-controls{display:flex;gap:0.5rem;align-items:center;margin-top:0.6rem}
+    .dot{width:10px;height:10px;border-radius:50%;background:rgba(11,111,240,0.08)}
+    .dot.active{background:var(--accent-1)}
+
+    .slider-preview{margin-top:0.7rem;padding:0.6rem;border-radius:10px;background:var(--control-bg);box-shadow:var(--shadow-1);display:none;align-items:center;transition:background 220ms ease}
+    .slider-preview[aria-hidden="false"]{display:flex}
+    .slider-preview img{width:110px;height:72px;object-fit:cover;border-radius:8px;margin-right:0.6rem}
+
+    /* ========================
+       Panel (detalle) — SOLID + Backdrop
+       ======================== */
+    /* backdrop (covers rest of page when panel open) */
+    .panel-backdrop{
+      position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:210;opacity:0;visibility:hidden;transition:opacity 320ms ease;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .panel-backdrop.show{opacity:1;visibility:visible}
+
+    /* panel itself uses a solid background var --panel-bg so is never translucent */
+    .panel{
+      position:fixed;right:-460px;top:0;height:100%;width:420px;background:var(--panel-bg);box-shadow:-24px 0 60px rgba(2,10,24,0.35);
+      transition:right 320ms ease-in-out;z-index:220;padding:1.2rem;overflow:auto;border-left:6px solid var(--muted-plate);
+      /* ensure not translucent: use background-color (solid) and no backdrop-filter */
+      backface-visibility: hidden; /* avoids some subpixel translucency on mobile */
+    }
+    .panel.open{right:0}
+
+    /* Close button — clear and always visible inside panel */
+    .panel .close{
+      position:absolute;top:12px;right:12px;border:none;background:transparent;color:var(--text);
+      font-size:20px;padding:8px;border-radius:8px;cursor:pointer;line-height:1;
+    }
+    .panel .close:focus{outline:3px solid rgba(11,107,240,0.14);outline-offset:3px}
+
+    /* fallback for small screens */
+    @media (max-width:880px){
+      .panel{right:-100%;width:100%;border-left:none}
+      .panel.open{right:0}
+    }
+
+    /* ========================
+       Grid & CTA
+       ======================== */
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:1rem}
+    .contact-cta{background:linear-gradient(90deg,var(--accent-1),#64b6ff);color:var(--text-on-accent);padding:1rem;border-radius:12px;margin:1.25rem 0;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+    .btn-light{background:rgba(255,255,255,0.95);border:1px solid rgba(255,255,255,0.5);color:var(--text);padding:0.5rem 0.8rem;border-radius:10px;font-weight:800}
+
+    /* ========================
+       WhatsApp widget (responsive)
+       ======================== */
+    .wa-widget{position:fixed;right:18px;bottom:18px;z-index:260;display:flex;flex-direction:column;align-items:flex-end;gap:10px}
+    .wa-toggle{
+      width:58px;height:58px;border-radius:14px;border:none;
+      background: linear-gradient(180deg,var(--wa-green-1),var(--wa-green-2));
+      color:#fff;display:inline-grid;place-items:center;cursor:pointer;box-shadow:var(--shadow-2);transition:transform 160ms ease;
+      min-height:var(--touch-min);
+    }
+    .wa-toggle:active{transform:scale(.98)}
+    .wa-badge{position:absolute;top:-8px;right:-8px;width:26px;height:26px;border-radius:999px;background:#ff4d4d;color:#fff;display:grid;place-items:center;font-weight:900;font-size:12px;border:3px solid #fff}
+    .wa-menu{background:var(--control-bg);border-radius:12px;padding:8px;border:1px solid var(--muted-plate);box-shadow:0 18px 40px rgba(4,42,102,0.08);min-width:260px;transform-origin:100% 100%;opacity:0;visibility:hidden;transition:opacity 160ms ease,transform 200ms cubic-bezier(.2,.9,.2,1)}
+    .wa-menu.open{opacity:1;visibility:visible;transform:translateY(-6px)}
+    .wa-item{display:flex;gap:10px;align-items:center;padding:10px;border-radius:10px;cursor:pointer;background:transparent;border:none;width:100%;text-align:left}
+    .wa-item:hover{background:rgba(11,107,240,0.04)}
+    .wa-item svg{width:22px;height:22px}
+    .wa-title{font-weight:800;color:var(--text)}
+    .wa-sub{font-size:0.9rem;color:var(--muted)}
+    .wa-send-order{background:linear-gradient(90deg,var(--accent-1),var(--accent-2));color:var(--text-on-accent);padding:8px 10px;border-radius:10px;border:none;font-weight:900;width:100%;cursor:pointer;margin-top:8px}
+
+    @media (max-width:520px){
+      .wa-menu{right:12px;left:12px;min-width:unset}
+      .wa-widget{right:12px;left:12px;align-items:stretch}
+      .wa-toggle{justify-self:flex-end}
+      .nav-inner{padding:0.4rem 0.75rem}
+      .brand h1{font-size:1rem}
+    }
+
+    /* responsive */
+    @media (max-width:1100px){ .hero{grid-template-columns:1fr 320px} }
+    @media (max-width:880px){
+      .nav-links{display:none} .menu-toggle{display:inline-block}
+      .hero{grid-template-columns:1fr}
+      .hero-aside{order:2} .hero-card{order:1} .slider-toggle{right:6px;top:6px}
+    }
+    @media (max-width:520px){
+      .slide{flex:0 0 86%} .brand img{width:44px;height:44px} .hero h2{font-size:1.25rem} .wa-toggle{width:52px;height:52px}
+      .cta-primary{padding:0.55rem 0.8rem}
+    }
+
+    /* focus */
+    :focus{outline: none}
+    button:focus, a:focus{outline:3px solid rgba(11,107,240,0.14);outline-offset:3px;border-radius:8px}
+  </style>
+</head>
+<body>
+  <nav class="nav" role="navigation" aria-label="Navegación principal">
+    <div class="nav-inner container">
+      <div class="brand">
+        <img src="cookies.jpg" alt="Logotipo Cookie Duo">
+        <h1>Cookie Duo</h1>
+      </div>
+
+      <div style="display:flex;align-items:center;gap:0.6rem">
+        <div class="nav-links" role="menubar" aria-label="Enlaces principales">
+          <a href="nosotros.html" role="menuitem">Nosotros</a>
+          <a href="carta.html" role="menuitem">Carta</a>
+          <a href="contacto.html" role="menuitem">Contacto</a>
+        </div>
+
+        <button class="cta-primary" id="openCarta" aria-controls="carta" title="Ir a la carta">Ver carta</button>
+
+        <!-- Theme toggle -->
+        <button id="themeToggle" class="theme-toggle" aria-pressed="false" aria-label="Alternar modo oscuro / claro" title="Alternar tema">
+          <svg id="themeIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false"><!-- injected by JS --></svg>
+          <span id="themeLabel" style="font-weight:700">Modo oscuro</span>
+        </button>
+
+        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mobileMenu" aria-label="Abrir menú móvil">☰</button>
+      </div>
+    </div>
+
+    <!-- mobile menu -->
+    <div id="mobileMenu" style="display:none;background:var(--control-bg);border-top:1px solid var(--control-border);padding:0.6rem 1rem">
+      <a href="nosotros.html" style="display:block;padding:0.6rem 0;color:var(--accent-1)">Nosotros</a>
+      <a href="carta.html" style="display:block;padding:0.6rem 0;color:var(--accent-1)">Carta</a>
+      <a href="contacto.html" style="display:block;padding:0.6rem 0;color:var(--accent-1)">Contacto</a>
+    </div>
+  </nav>
+
+  <main class="container" id="main">
+    <section class="hero" aria-labelledby="heroTitle">
+      <div class="hero-card" role="region" aria-labelledby="heroTitle">
+        <h2 id="heroTitle">Galletas artesanales con enfoque corporativo</h2>
+        <p>Nuestro proceso combina control, trazabilidad y un sabor casero que funciona perfecto para eventos, regalos y pedidos empresariales.</p>
+
+        <div style="margin-top:0.9rem;display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap">
+          <button class="btn btn-primary" id="btnPresupuesto">Solicitar cotización</button>
+          <span style="font-size:0.95rem;color:var(--muted)">Pedidos mínimos para empresas: <strong>50 unidades</strong></span>
+        </div>
+
+        <div class="slider-wrap" aria-label="Productos destacados">
+          <h3 style="margin:0.8rem 0 0.4rem;color:var(--text)">Productos destacados</h3>
+
+          <div class="slider" id="slider" tabindex="0">
+            <!-- Slides -->
+            <article class="slide" data-id="g1" tabindex="0">
+              <img src="g3 mantequilla.webp" alt="Galleta de mantequilla" style="border-radius:8px;height:140px;object-fit:cover;margin-bottom:0.6rem">
+              <h3>Galleta de Mantequilla</h3>
+              <p>Textura crujiente y sabor tradicional. Empaque individual o caja corporativa.</p>
+              <div class="actions">
+                <button class="btn btn-outline" data-action="ver" data-product="Galleta de Mantequilla">Ver</button>
+                <button class="btn btn-primary" data-action="add" data-product="Galleta de Mantequilla">Agregar</button>
+              </div>
+            </article>
+
+            <article class="slide" data-id="g2" tabindex="0">
+              <img src="g2.webp" alt="Galleta chocolate" style="border-radius:8px;height:140px;object-fit:cover;margin-bottom:0.6rem">
+              <h3>Galleta Chocolate Intenso</h3>
+              <p>Receta premium con cacao seleccionado. Ideal para cajas regalo.</p>
+              <div class="actions">
+                <button class="btn btn-outline" data-action="ver" data-product="Galleta Chocolate Intenso">Ver</button>
+                <button class="btn btn-primary" data-action="add" data-product="Galleta Chocolate Intenso">Agregar</button>
+              </div>
+            </article>
+
+            <article class="slide" data-id="g3" tabindex="0">
+              <img src="galleta de miel.webp" alt="Galleta avena" style="border-radius:8px;height:140px;object-fit:cover;margin-bottom:0.6rem">
+              <h3>Galleta Avena y Miel</h3>
+              <p>Opción integral, con textura densa y notas de miel natural.</p>
+              <div class="actions">
+                <button class="btn btn-outline" data-action="ver" data-product="Galleta Avena y Miel">Ver</button>
+                <button class="btn btn-primary" data-action="add" data-product="Galleta Avena y Miel">Agregar</button>
+              </div>
+            </article>
+          </div>
+
+          <div class="slider-controls" id="dots" aria-hidden="false"></div>
+          <button id="sliderToggle" class="slider-toggle" aria-expanded="false" aria-label="Expandir slider">⤢</button>
+          <div id="sliderPreview" class="slider-preview" aria-hidden="true" role="status" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <aside class="hero-aside" style="background:var(--card-grad);padding:1rem;border-radius:12px;box-shadow:var(--shadow-1)" aria-label="Datos rápidos">
+        <h4 style="margin:0 0 0.6rem;color:var(--text)">Datos clave</h4>
+        <p style="margin:0 0 0.8rem;color:var(--muted)">Atendemos eventos corporativos, cajas de regalo y pedidos recurrentes para oficinas con entrega programada.</p>
+        <ul style="margin:0;padding-left:1.05rem;color:var(--muted)">
+          <li>Plazo de producción habitual: 3-7 días hábiles</li>
+          <li>Empaque personalizado para marca (mínimo según tirada)</li>
+          <li>Garantía de calidad y trazabilidad por lote</li>
+        </ul>
+      </aside>
+    </section>
+
+    <!-- Carta -->
+    <section id="carta" aria-labelledby="cartaTitle">
+      <h2 id="cartaTitle" style="margin-top:1rem;color:var(--text)">Carta de Productos</h2>
+      <p style="color:var(--muted);margin:0.4rem 0 0.8rem">Selecciona un producto para ver detalles y opciones de pedido.</p>
+
+      <div class="grid" id="productGrid">
+        <article class="slide" data-id="g1">
+          <img src="g3 mantequilla.webp" alt="Galleta de mantequilla" style="border-radius:8px;height:160px;object-fit:cover;margin-bottom:0.6rem">
+          <h3>Galleta de Mantequilla</h3>
+          <p>Presentación: individual / caja de 12 / caja corporativa (50+)</p>
+          <div style="display:flex;gap:0.5rem;margin-top:0.5rem">
+            <button class="btn btn-outline" data-action="ver" data-product="Galleta de Mantequilla">Ver</button>
+            <button class="btn btn-primary" data-action="add" data-product="Galleta de Mantequilla">Agregar</button>
+          </div>
+        </article>
+
+        <article class="slide" data-id="g2">
+          <img src="g2.webp" alt="Galleta chocolate" style="border-radius:8px;height:160px;object-fit:cover;margin-bottom:0.6rem">
+          <h3>Galleta Chocolate Intenso</h3>
+          <p>Presentación: caja de 12 / caja regalo / caja corporativa (50+)</p>
+          <div style="display:flex;gap:0.5rem;margin-top:0.5rem">
+            <button class="btn btn-outline" data-action="ver" data-product="Galleta Chocolate Intenso">Ver</button>
+            <button class="btn btn-primary" data-action="add" data-product="Galleta Chocolate Intenso">Agregar</button>
+          </div>
+        </article>
+
+        <article class="slide" data-id="g3">
+          <img src="galleta de miel.webp" alt="Galleta avena" style="border-radius:8px;height:160px;object-fit:cover;margin-bottom:0.6rem">
+          <h3>Galleta Avena y Miel</h3>
+          <p>Presentación: individual / caja de 12 / caja corporativa (50+)</p>
+          <div style="display:flex;gap:0.5rem;margin-top:0.5rem">
+            <button class="btn btn-outline" data-action="ver" data-product="Galleta Avena y Miel">Ver</button>
+            <button class="btn btn-primary" data-action="add" data-product="Galleta Avena y Miel">Agregar</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Contact CTA -->
+    <section id="contacto" aria-labelledby="contactTitle">
+      <div class="contact-cta" role="region" aria-labelledby="contactTitle">
+        <div class="left">
+          <h3 id="contactTitle">Cotizaciones y pedidos corporativos</h3>
+          <p style="margin:0.35rem 0 0;color:rgba(255,255,255,0.95)">Solicita una cotización personalizada según cantidad, empaque y fecha de entrega.</p>
+        </div>
+        <div class="actions">
+          <button class="btn btn-outline" id="waBtnHeader">WhatsApp</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Backdrop for panel (inserted in DOM for visual blocking) -->
+  <div id="panelBackdrop" class="panel-backdrop" aria-hidden="true" tabindex="-1"></div>
+
+  <!-- Panel detalle -->
+  <aside class="panel" id="panel" aria-hidden="true" aria-labelledby="panelTitle" role="dialog" aria-modal="true">
+    <!-- close button visible and accessible -->
+    <button class="close" id="closePanel" aria-label="Cerrar panel">✕</button>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:8px">
+      <h3 id="panelTitle">Detalle de producto</h3>
+    </div>
+
+    <div id="panelContent" style="margin-top:0.6rem"></div>
+    <div style="margin-top:1rem;display:flex;gap:0.6rem;align-items:center;flex-wrap:wrap">
+      <label for="qty" style="font-weight:700">Cantidad</label>
+      <input id="qty" type="number" min="1" value="12" style="width:88px;padding:0.45rem;border-radius:8px;border:1px solid var(--muted-plate);background:var(--control-bg);color:var(--text)">
+      <button class="btn btn-primary" id="panelAdd">Agregar al carrito</button>
+    </div>
+  </aside>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner container" style="display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;padding:1rem 0;background:transparent">
+      <div>
+        <strong>Cookie Duo</strong>
+        <p style="margin:6px 0 0;color:var(--muted)">Galletas artesanales · Empaques responsables · Atención corporativa</p>
+      </div>
+      <div>
+        <strong>Contacto</strong>
+        <p style="margin:6px 0 0;color:var(--muted)">+57 301 2548388</p>
+      </div>
+      <div>
+        <strong>Síguenos</strong>
+        <div style="display:flex;gap:0.5rem;margin-top:0.6rem">
+          <a href="https://instagram.com/cookieduo_oficial" aria-label="Instagram">@cookieduo_oficial</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- WhatsApp widget (unchanged) -->
+  <div class="wa-widget" id="waWidget" aria-live="polite">
+    <div class="wa-menu" id="waMenu" role="menu" aria-hidden="true">
+      <button class="wa-item" id="waOpenChat" role="menuitem">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.95.53 3.77 1.44 5.31L2 22l4.86-1.42C8.33 21.16 10.11 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2Z" fill="var(--accent-1)"/></svg>
+        <div><div class="wa-title">Abrir chat</div><div class="wa-sub">Habla con nosotros ahora</div></div>
+      </button>
+
+      <button class="wa-item" id="waSendTemplate" role="menuitem">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M3 7v10a2 2 0 0 0 2 2h14" stroke="var(--accent-1)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 7V5a2 2 0 0 0-2-2H7" stroke="var(--accent-1)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 12h10" stroke="var(--accent-1)" stroke-width="1.8" stroke-linecap="round"/></svg>
+        <div><div class="wa-title">Enviar plantilla</div><div class="wa-sub">Prepara tu pedido rápido</div></div>
+      </button>
+
+      <button class="wa-item" id="waCall" role="menuitem">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path d="M21 16.5a16 16 0 0 1-9-9L13.5 4" stroke="var(--accent-1)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M15 4h3v3" stroke="var(--accent-1)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <div><div class="wa-title">Llamar</div><div class="wa-sub">Número: +57 301 2548388</div></div>
+      </button>
+
+      <button class="wa-send-order" id="waSendOrder" title="Enviar pedido por WhatsApp">Enviar pedido (WhatsApp)</button>
+      <div style="font-size:0.82rem;color:var(--muted);margin-top:8px">Pulsa Esc para cerrar · Navegable con teclado</div>
+    </div>
+
+    <button class="wa-toggle" id="waToggle" aria-expanded="false" aria-controls="waMenu" aria-label="Abrir opciones de WhatsApp">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M20.52 3.48A11.95 11.95 0 0012 0C5.373 0 .012 5.373.012 12 0 14.04.525 16.02 1.52 17.76L0 24l6.6-1.72A11.93 11.93 0 0012 24c6.627 0 11.99-5.373 11.99-12 0-3.21-1.25-6.21-3.47-8.52z" fill="#075E54"/>
+        <path d="M17.27 14.03c-.29-.14-1.71-.85-1.97-.95-.26-.11-.45-.14-.64.14-.19.29-.74.95-.9 1.15-.17.19-.34.22-.63.08-.29-.14-1.22-.45-2.32-1.44-.86-.77-1.44-1.72-1.61-2.01-.17-.29-.02-.44.13-.58.13-.13.29-.34.44-.51.15-.17.2-.29.3-.48.11-.19.05-.35-.02-.49-.07-.14-.64-1.54-.88-2.12-.23-.56-.47-.48-.65-.49-.17-.01-.37-.01-.57-.01-.2 0-.52.07-.79.34-.28.27-1.08 1.05-1.08 2.55 0 1.5 1.12 2.95 1.28 3.16.16.21 2.2 3.36 5.34 4.71 1 .43 1.78.58 2.42.7.86.19 1.68.12 2.31.02.72-.12 2.22-.95 2.55-1.88.33-.93.33-1.6.24-1.75-.09-.15-.35-.28-.64-.42z" fill="#fff"/>
+      </svg>
+      <span class="sr-only">Opciones de WhatsApp</span>
+      <span id="waCounter" class="wa-badge" aria-hidden="true" style="display:none">0</span>
+    </button>
+  </div>
+
+  <script>
+    /* ========================
+       Theme logic (unchanged)
+       ======================== */
+    const themeToggleBtn = document.getElementById('themeToggle');
+    const themeLabel = document.getElementById('themeLabel');
+    const themeIcon = document.getElementById('themeIcon');
+
+    function applyTheme(theme){
+      const root = document.documentElement;
+      if(theme === 'dark'){
+        root.classList.add('dark');
+        root.setAttribute('data-theme','dark');
+        themeToggleBtn.setAttribute('aria-pressed','true');
+        themeLabel.textContent = 'Modo claro';
+        themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 0111.21 3 7 7 0 1021 12.79z" fill="#fff"/>';
+      } else {
+        root.classList.remove('dark');
+        root.removeAttribute('data-theme');
+        themeToggleBtn.setAttribute('aria-pressed','false');
+        themeLabel.textContent = 'Modo oscuro';
+        themeIcon.innerHTML = '<path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zM1 13h3v-2H1v2zm10 8h2v-3h-2v3zm7-3.16l1.8 1.79 1.41-1.41-1.79-1.8-1.42 1.42zM17 13a5 5 0 11-10 0 5 5 0 0110 0zm-5-9h2V1h-2v3zM4.22 19.78l1.79-1.8-1.41-1.41-1.8 1.79 1.42 1.42zM23 11v2h-3v-2h3z" fill="#04243f"/>';
+      }
+    }
+
+    function getPreferredTheme(){
+      const saved = localStorage.getItem('site-theme');
+      if(saved === 'dark' || saved === 'light') return saved;
+      const mq = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      return mq ? 'dark' : 'light';
+    }
+
+    function toggleTheme(){
+      const current = document.documentElement.classList.contains('dark') ? 'dark' : 'light';
+      const next = current === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      localStorage.setItem('site-theme', next);
+    }
+
+    (function initTheme(){ applyTheme(getPreferredTheme()); })();
+    themeToggleBtn.addEventListener('click', toggleTheme);
+    themeToggleBtn.addEventListener('keyup', (e)=>{ if(e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleTheme(); } });
+
+    /* ========================
+       Rest of page JS + improved panel/backdrop behavior
+       ======================== */
+    const PRODUCTS = {
+      'Galleta de Mantequilla': {price:3000,desc:'Clásica, crujiente y con mantequilla real. Empaque individual o caja corporativa.'},
+      'Galleta Chocolate Intenso': {price:3200,desc:'Cacao premium y textura suave. Ideal para regalos y cajas corporativas.'},
+      'Galleta Avena y Miel': {price:3500,desc:'Opción integral con miel natural y textura consistente.'}
+    };
+    let cart = {};
+
+    const slider = document.getElementById('slider');
+    const slides = Array.from(slider.querySelectorAll('.slide'));
+    const dotsWrap = document.getElementById('dots');
+    slides.forEach((s,i)=>{
+      const d=document.createElement('button'); d.className='dot'; d.setAttribute('aria-label',`Ir al producto ${i+1}`);
+      d.addEventListener('click',()=> s.scrollIntoView({behavior:'smooth',inline:'center'}));
+      dotsWrap.appendChild(d);
+    });
+    const dots = Array.from(dotsWrap.children);
+    function syncDots(){
+      const center = slider.scrollLeft + slider.offsetWidth/2;
+      slides.forEach((s,i)=>{
+        const r = s.offsetLeft + s.offsetWidth/2;
+        if(Math.abs(r-center) < s.offsetWidth/2) {dots[i].classList.add('active')} else {dots[i].classList.remove('active')}
+      });
+    }
+    slider.addEventListener('scroll', throttle(syncDots,120));
+    syncDots();
+
+    const preview = document.getElementById('sliderPreview');
+    function showPreviewForSlide(s){
+      const imgEl = s.querySelector('img'); const titleEl = s.querySelector('h3');
+      const title = titleEl ? titleEl.textContent : '';
+      const price = PRODUCTS[title] ? PRODUCTS[title].price : '';
+      const imgSrc = imgEl ? imgEl.src : '';
+      preview.innerHTML = `<img src="${imgSrc}" alt="${title}"><div><strong style="display:block;color:var(--text)">${title}</strong><small style="color:var(--muted)">Precio: $${price.toLocaleString()}</small></div>`;
+      preview.setAttribute('aria-hidden','false');
+    }
+    function hidePreview(){ preview.setAttribute('aria-hidden','true'); }
+    slides.forEach(s=>{
+      s.addEventListener('mouseenter',()=>showPreviewForSlide(s));
+      s.addEventListener('focusin',()=>showPreviewForSlide(s));
+      s.addEventListener('mouseleave',()=>hidePreview());
+      s.addEventListener('focusout',()=>hidePreview());
+    });
+
+    document.getElementById('sliderToggle').addEventListener('click', ()=>{
+      const wrap = document.querySelector('.slider-wrap');
+      const expanded = wrap.classList.toggle('expanded');
+      document.getElementById('sliderToggle').setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      document.getElementById('sliderToggle').textContent = expanded ? '×' : '⤢';
+      if(expanded) slider.focus();
+    });
+
+    const menuToggle = document.getElementById('menuToggle');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuToggle.addEventListener('click', ()=>{
+      const open = mobileMenu.style.display === 'block';
+      mobileMenu.style.display = open ? 'none' : 'block';
+      menuToggle.setAttribute('aria-expanded', open ? 'false' : 'true');
+    });
+
+    // Panel + Backdrop logic (improvements)
+    const panel = document.getElementById('panel');
+    const panelBackdrop = document.getElementById('panelBackdrop');
+    const panelContent = document.getElementById('panelContent');
+    const closePanelBtn = document.getElementById('closePanel');
+    let currentProduct = null;
+
+    function showBackdrop(){
+      panelBackdrop.classList.add('show');
+      panelBackdrop.setAttribute('aria-hidden','false');
+    }
+    function hideBackdrop(){
+      panelBackdrop.classList.remove('show');
+      panelBackdrop.setAttribute('aria-hidden','true');
+    }
+
+    function openPanel(product){
+      currentProduct = product;
+      panelContent.innerHTML = `<p style="color:var(--muted);margin:0.2rem 0 0.8rem"><strong>${product}</strong></p><p style="margin:0;color:var(--muted)">${PRODUCTS[product].desc}</p><p style="margin-top:0.6rem;font-weight:800;color:var(--text)">Precio referencia: $${PRODUCTS[product].price.toLocaleString()}</p>`;
+      panel.classList.add('open'); panel.setAttribute('aria-hidden','false');
+      showBackdrop();
+      // put focus in qty for keyboard users
+      setTimeout(()=> document.getElementById('qty').focus(), 220);
+      // prevent body scroll while panel open
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closePanel(){
+      panel.classList.remove('open'); panel.setAttribute('aria-hidden','true');
+      hideBackdrop();
+      document.body.style.overflow = '';
+    }
+
+    document.body.addEventListener('click', (e) => {
+      const btn = e.target.closest('button[data-action]');
+      if(!btn) return;
+      const action = btn.dataset.action;
+      const product = btn.dataset.product;
+      if(action === 'ver') openPanel(product);
+      if(action === 'add') addToCart(product, 12);
+    });
+
+    closePanelBtn.addEventListener('click', closePanel);
+    panelBackdrop.addEventListener('click', closePanel);
+
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape'){
+        // close panel if open
+        if(panel.classList.contains('open')) closePanel();
+        // also close mobile menu / widget
+        if(mobileMenu.style.display === 'block'){ mobileMenu.style.display='none'; menuToggle.setAttribute('aria-expanded','false'); }
+      }
+    });
+
+    document.getElementById('panelAdd').addEventListener('click', ()=> {
+      const qty = Number(document.getElementById('qty').value) || 1;
+      addToCart(currentProduct, qty);
+    });
+
+    function addToCart(product, qty){
+      if(!PRODUCTS[product]) { alert('Producto no disponible'); return; }
+      cart[product] = (cart[product] || 0) + qty;
+      updateCartUI();
+      const prev = document.activeElement; alert(`${qty} x ${product} añadidos al carrito.`); if(prev) prev.focus();
+    }
+    function updateCartUI(){
+      const btn = document.querySelector('.cta-primary'); if(!btn) return;
+      const total = Object.values(cart).reduce((a,b)=>a+b,0);
+      const waCounter = document.getElementById('waCounter');
+      if(total>0){
+        if(!document.getElementById('cartCount')){
+          const span = document.createElement('span'); span.id='cartCount'; span.className='cart-counter'; span.textContent=total;
+          span.style.marginLeft='8px'; span.style.background='#ff6b6b'; span.style.color='#fff'; span.style.padding='4px 8px'; span.style.borderRadius='999px'; span.style.fontWeight='800';
+          btn.parentNode.insertBefore(span, btn.nextSibling);
+        } else {
+          document.getElementById('cartCount').textContent=total;
+        }
+        if(waCounter){ waCounter.style.display='grid'; waCounter.textContent = total; }
+      } else {
+        const c=document.getElementById('cartCount'); if(c) c.remove();
+        if(waCounter){ waCounter.style.display='none'; }
+      }
+    }
+
+    const waToggle = document.getElementById('waToggle');
+    const waMenu = document.getElementById('waMenu');
+    const waOpenChat = document.getElementById('waOpenChat');
+    const waSendTemplate = document.getElementById('waSendTemplate');
+    const waCall = document.getElementById('waCall');
+    const waSendOrder = document.getElementById('waSendOrder');
+    const waBtnHeader = document.getElementById('waBtnHeader');
+
+    const WA_NUMBER = '573012548388';
+    const WA_BASE = `https://wa.me/${WA_NUMBER}?text=`;
+
+    function toggleWaMenu(open){
+      const isOpen = waMenu.classList.contains('open');
+      const next = (typeof open === 'boolean') ? open : !isOpen;
+      if(next){
+        waMenu.classList.add('open'); waMenu.setAttribute('aria-hidden','false'); waToggle.setAttribute('aria-expanded','true');
+        setTimeout(()=> waOpenChat.focus(), 120);
+      } else {
+        waMenu.classList.remove('open'); waMenu.setAttribute('aria-hidden','true'); waToggle.setAttribute('aria-expanded','false');
+        waToggle.focus();
+      }
+    }
+    waToggle.addEventListener('click', ()=> toggleWaMenu());
+    waToggle.addEventListener('keyup', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); toggleWaMenu(); } });
+
+    function buildTemplate(){
+      const items = Object.entries(cart);
+      if(items.length === 0){
+        return 'Hola 👋, solicito información y cotización corporativa. ¿Podrían indicarme precios y plazos?';
+      }
+      let text = 'Hola 👋, quiero solicitar cotización para pedido corporativo:%0A';
+      items.forEach(([name,qty])=>{
+        text += `- ${name}: ${qty} unidades%0A`;
+      });
+      text += '%0APor favor indicar precio por unidad, tiempo de producción y opciones de empaque. Gracias.';
+      return decodeURIComponent(text);
+    }
+
+    function openWhatsAppWith(message){
+      const encoded = encodeURIComponent(message);
+      const url = WA_BASE + encoded;
+      window.open(url,'_blank','noopener');
+    }
+
+    waOpenChat.addEventListener('click', ()=> openWhatsAppWith('Hola 👋, quisiera consultar disponibilidad y precios.'));
+    waSendTemplate.addEventListener('click', ()=> window.open(WA_BASE + '*Pedido Cookie Duo*%0ANombre:%0AProducto:%0ACantidad:%0AFecha%0ADirección:%0ATeléfono:%0APreferencias:%0A','_blank','noopener'));
+    waCall.addEventListener('click', ()=> { window.location.href = 'tel:+573012548388'; });
+    waSendOrder.addEventListener('click', ()=> openWhatsAppWith(buildTemplate()));
+    waBtnHeader.addEventListener('click', ()=> { openWhatsAppWith(buildTemplate()); if(window.innerWidth < 760) toggleWaMenu(false); });
+
+    document.addEventListener('click', (e)=>{
+      const inside = e.target.closest('.wa-widget') || e.target.closest('#themeToggle');
+      if(!inside) toggleWaMenu(false);
+    });
+
+    document.getElementById('openCarta').addEventListener('click', ()=> document.getElementById('carta').scrollIntoView({behavior:'smooth'}));
+    document.getElementById('btnPresupuesto').addEventListener('click', ()=> document.getElementById('contacto').scrollIntoView({behavior:'smooth'}));
+
+    function throttle(fn, wait){ let time=Date.now(); return function(){ if((time+wait-Date.now())<0){ fn(); time=Date.now(); } } }
+
+    slider.addEventListener('keydown', (e)=>{
+      if(e.key === 'ArrowRight'){ slider.scrollBy({left: slider.offsetWidth * 0.7, behavior:'smooth'}); }
+      if(e.key === 'ArrowLeft'){ slider.scrollBy({left: -slider.offsetWidth * 0.7, behavior:'smooth'}); }
+    });
+
+    // Init UI
+    updateCartUI();
+    syncDots();
+  </script>
+</body>
+</html>
+

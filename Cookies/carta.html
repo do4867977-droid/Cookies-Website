@@ -1,0 +1,705 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cookie Duo — Carta de Productos</title>
+  <meta name="description" content="Cookie Duo — galletas artesanales. Carta, pedidos y contacto." />
+  <meta name="color-scheme" content="light dark">
+  <style>
+    /* ---------------- Variables - paleta azul/blanco ---------------- */
+    :root{
+      --bg-top: #eaf5ff;
+      --bg-bottom: #ffffff;
+      --paper: #ffffff;
+      --accent: #0b6bf0;       /* primary blue */
+      --accent-2: #0649c1;     /* darker blue */
+      --muted: #1f4f78;        /* muted blue */
+      --muted-2: #3b6fa6;
+      --glass: rgba(255,255,255,0.92);
+      --glass-2: rgba(11,107,240,0.06);
+      --shadow: 0 10px 30px rgba(6,40,120,0.06);
+      --panel-shadow: -20px 0 48px rgba(6,40,120,0.08);
+      --radius:12px;
+      --maxW:1200px;
+      --focus: 3px solid rgba(11,107,240,0.12);
+      --transition: 220ms cubic-bezier(.2,.9,.3,1);
+      --success: #25d366; /* whatsapp green */
+      --text: #07263d;
+    }
+
+    /* dark theme overrides */
+    :root.dark, :root[data-theme="dark"]{
+      --bg-top: #071428;
+      --bg-bottom: #02101a;
+      --paper: #07192a;
+      --accent: #3ea0ff;
+      --accent-2: #2b6ea8;
+      --muted: #9fc9ff;
+      --muted-2: #83b9f0;
+      --glass: rgba(255,255,255,0.02);
+      --glass-2: rgba(255,255,255,0.04);
+      --shadow: 0 18px 40px rgba(0,0,0,0.6);
+      --panel-shadow: -24px 0 60px rgba(0,0,0,0.6);
+      --text: #dbeeff;
+      --success: #2fd86b;
+    }
+
+    /* ---------- Reset & base ---------- */
+    *,*::before,*::after{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial;
+      background: linear-gradient(180deg,var(--bg-top), var(--bg-bottom));
+      color:var(--text); -webkit-font-smoothing:antialiased;line-height:1.45;
+      display:flex;flex-direction:column;min-height:100vh;padding-bottom:48px;
+      transition: background .22s ease, color .22s ease;
+    }
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block;height:auto;vertical-align:middle;border-radius:8px}
+
+    .container{width:100%;max-width:var(--maxW);margin:0 auto;padding:1rem}
+
+    /* ---------- NAV ---------- */
+    nav.nav{
+      background: linear-gradient(180deg,var(--paper), color-mix(in srgb, var(--paper) 92%, transparent));
+      border-bottom:1px solid var(--glass-2);
+      position:sticky;top:0;z-index:150;backdrop-filter: blur(6px);
+      box-shadow: 0 6px 18px rgba(6,40,120,0.03);
+    }
+    .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:0.6rem 1rem;max-width:var(--maxW);margin:0 auto}
+    .brand{display:flex;gap:0.75rem;align-items:center}
+    .brand img{width:48px;height:48px;border-radius:10px;object-fit:cover;box-shadow:0 8px 18px rgba(6,40,120,0.06)}
+    .brand h1{margin:0;font-size:1.1rem;color:var(--accent);font-weight:900;letter-spacing:0.4px}
+    .nav-actions{display:flex;align-items:center;gap:0.6rem}
+    .nav-links{display:flex;gap:0.5rem;align-items:center}
+    .nav-links a{padding:0.45rem 0.7rem;border-radius:10px;font-weight:700;color:var(--muted)}
+    .nav-links a:hover{background:var(--glass)}
+    .cta-primary{
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff;padding:0.55rem 0.9rem;border-radius:10px;font-weight:800;border:none;cursor:pointer;
+      box-shadow: 0 10px 28px rgba(6,40,120,0.08); transition: transform var(--transition), box-shadow var(--transition);
+    }
+    .cta-primary:active{transform:translateY(1px)}
+    .menu-toggle{display:none;background:transparent;border:none;font-size:22px;cursor:pointer;color:var(--muted)}
+    .theme-toggle { display:inline-flex; gap:8px; align-items:center; padding:8px 10px; border-radius:10px; border:1px solid var(--glass-2); background:transparent; cursor:pointer; color:var(--muted); font-weight:700 }
+
+    /* ---------- Hero ---------- */
+    .hero{display:grid;grid-template-columns:1fr 340px;gap:1rem;align-items:start;margin:1.25rem 0}
+    .hero-card{background:var(--paper);border-radius:var(--radius);padding:1.25rem;box-shadow:var(--shadow);border:1px solid var(--glass-2);position:relative;overflow:visible}
+    .hero h2{margin:0 0 0.4rem;color:var(--accent);font-size:1.5rem}
+    .hero p{margin:0;color:var(--muted)}
+    .hero .meta{display:flex;gap:0.6rem;align-items:center;margin-top:0.9rem;flex-wrap:wrap}
+
+    /* ---------- Slider area ---------- */
+    .slider-wrap{margin-top:1rem;position:relative}
+    .slider-toggle{position:absolute;right:8px;top:8px;background:transparent;border:2px solid var(--accent-2);color:var(--accent);width:44px;height:44px;border-radius:10px;display:inline-grid;place-items:center;cursor:pointer;box-shadow:0 6px 20px rgba(6,40,120,0.06)}
+    .slider{display:flex;gap:1rem;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:0.6rem;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;padding:0.2rem}
+    .slide{flex:0 0 300px;background:linear-gradient(180deg,var(--paper), color-mix(in srgb, var(--paper) 96%, #f0f8ff));border-radius:14px;padding:0.9rem;box-shadow:0 10px 24px rgba(6,40,120,0.04);scroll-snap-align:center;border:1px solid var(--glass-2);transition: transform var(--transition), box-shadow var(--transition);transform-origin:center;position:relative}
+    .slide-inner{display:block;border-radius:10px;overflow:hidden;background:transparent}
+    .slide img{height:140px;width:100%;object-fit:cover;border-radius:8px;margin-bottom:0.6rem;display:block}
+    .slide h3{margin:0 0 0.4rem;font-size:1.05rem;color:var(--accent)}
+    .slide p{margin:0 0 0.6rem;color:var(--muted)}
+    .slide .actions{display:flex;gap:0.5rem;align-items:center}
+    .price{margin-left:auto;font-weight:900;color:var(--accent-2)}
+    .heart{width:36px;height:36px;border-radius:10px;border:1px solid rgba(11,107,240,0.06);display:inline-grid;place-items:center;cursor:pointer;transition:transform var(--transition),background var(--transition);background:transparent}
+    .heart.liked{background:linear-gradient(90deg, rgba(255,200,200,0.12), rgba(255,200,200,0.06));border-color: rgba(255,90,90,0.12)}
+    .heart svg{width:18px;height:18px;fill:var(--accent-2)}
+    .btn{padding:0.48rem 0.8rem;border-radius:10px;border:none;font-weight:800;cursor:pointer}
+    .btn-outline{background:transparent;border:1px solid rgba(11,107,240,0.06);color:var(--muted)}
+    .add-anim{position:relative;overflow:visible}
+    .cart-burst{position:absolute;right:8px;top:-10px;width:14px;height:14px;border-radius:50%;background:var(--accent-2);opacity:0;transform:scale(0.6);transition:all 520ms ease}
+
+    .slider-controls{display:flex;gap:0.5rem;align-items:center;margin-top:0.6rem}
+    .dot{width:10px;height:10px;border-radius:50%;background:rgba(11,107,240,0.06);border:1px solid rgba(255,255,255,0.12)}
+    .dot.active{background:var(--accent)}
+    .slider-preview{margin-top:0.7rem;padding:0.6rem;border-radius:10px;background:linear-gradient(180deg,var(--paper), color-mix(in srgb, var(--paper) 96%, #f4fbff));box-shadow:0 8px 24px rgba(6,40,120,0.04);display:none;align-items:center;gap:0.6rem}
+    .slider-preview[aria-hidden="false"]{display:flex}
+    .slider-preview img{width:110px;height:72px;object-fit:cover;border-radius:8px;margin-right:0.6rem}
+
+    /* ---------- Aside (datos) ---------- */
+    .hero-aside{background:linear-gradient(180deg,var(--paper), color-mix(in srgb, var(--paper) 96%, #f4fbff));padding:1rem;border-radius:12px;box-shadow:var(--shadow);border:1px solid var(--glass-2)}
+    .hero-aside h4{margin:0 0 0.6rem;color:var(--accent)}
+    .hero-aside p{margin:0 0 0.6rem;color:var(--muted)}
+
+    /* ---------- Grid carta ---------- */
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:1rem}
+    .card{background:var(--paper);padding:0.9rem;border-radius:12px;border:1px solid var(--glass-2);box-shadow:0 8px 20px rgba(6,40,120,0.04);transition:transform var(--transition),box-shadow var(--transition)}
+    .card:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(6,40,120,0.08)}
+    .card img{height:150px;object-fit:cover;border-radius:10px;margin-bottom:0.6rem}
+
+    /* ---------- Panel detalle ---------- */
+    .panel{position:fixed;right:-460px;top:0;height:100%;width:420px;background:linear-gradient(180deg,var(--paper), color-mix(in srgb, var(--paper) 96%, #f8fbff));box-shadow:var(--panel-shadow);transition:right 320ms ease-in-out;z-index:260;padding:1rem;overflow:auto;border-left:6px solid var(--accent-2)}
+    .panel.open{right:0}
+    .panel .close{border:none;background:transparent;font-weight:800;font-size:1.1rem;cursor:pointer;color:var(--muted)}
+
+    /* ---------- Footer & whatsapp ---------- */
+    footer{margin-top:auto;background:linear-gradient(90deg,var(--accent-2), var(--accent));color:#fff;padding:1rem 0}
+    .footer-inner{max-width:var(--maxW);margin:0 auto;padding:0 1rem;display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+
+    /* modern whatsapp pill */
+    .whatsapp-pill{
+      position:fixed;right:16px;bottom:16px;z-index:280;display:flex;align-items:center;gap:10px;padding:12px 14px;border-radius:999px;background:linear-gradient(90deg,var(--success), #06a75b);color:#fff;font-weight:800;font-size:15px;box-shadow:0 18px 36px rgba(0,0,0,0.12);border:none;
+      transition:transform .12s ease, box-shadow .12s ease, opacity .12s ease;
+    }
+    .whatsapp-pill .wa-icon{width:34px;height:34px;border-radius:8px;display:grid;place-items:center;background:rgba(255,255,255,0.12);flex-shrink:0}
+    .whatsapp-pill .wa-label{display:inline-block}
+    .whatsapp-pill .wa-badge{
+      display:inline-grid;
+      grid-auto-flow:column;
+      gap:6px;
+      align-items:center;
+      justify-items:center;
+      min-width:28px;
+      height:24px;
+      background: #fff;
+      color: #128C7E;
+      padding:0 8px;
+      border-radius:999px;
+      font-weight:800;
+      font-size:0.78rem;
+      margin-left:6px;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+    }
+    .whatsapp-pill:active{transform:translateY(1px)}
+    @media (max-width:520px){ .whatsapp-pill .wa-label{display:none;padding:10px} .whatsapp-pill{padding:10px;border-radius:12px} }
+
+    /* focus states */
+    button:focus, a:focus, input:focus { outline: none; box-shadow: var(--focus); border-radius:8px; }
+
+    /* interactions */
+    .shake{animation: shake 420ms cubic-bezier(.36,.07,.19,.97);}
+    @keyframes shake{0%{transform:translateX(0)}25%{transform:translateX(-6px)}50%{transform:translateX(6px)}75%{transform:translateX(-4px)}100%{transform:translateX(0)}}
+
+    /* responsive tweaks */
+    @media (max-width:1080px){ .hero{grid-template-columns:1fr 300px} .slide{flex:0 0 280px} }
+    @media (max-width:880px){
+      .nav-links{display:none}
+      .menu-toggle{display:inline-block}
+      .hero{grid-template-columns:1fr}
+      .hero-aside{order:2}
+      .hero-card{order:1}
+      .panel{width:100%;right:-100%}
+      .panel.open{right:0}
+      .slider-toggle{right:10px;top:6px}
+    }
+    @media (max-width:620px){
+      .slide{flex:0 0 86%}
+      .brand img{width:40px;height:40px}
+      .hero h2{font-size:1.25rem}
+      body{padding-bottom:96px}
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav" role="navigation" aria-label="Navegación principal">
+    <div class="nav-inner container">
+      <div class="brand">
+        <img src="cookies.jpg" alt="Logotipo Cookie Duo">
+        <h1>Cookie Duo</h1>
+      </div>
+
+      <div class="nav-actions">
+        <div class="nav-links" role="menubar" aria-label="Enlaces principales">
+          <a href="nosotros.html" role="menuitem">Nosotros</a>
+          <a href="carta.html" role="menuitem">Carta</a>
+          <a href="contacto.html" role="menuitem">Contacto</a>
+        </div>
+
+        <button class="theme-toggle" id="themeToggle" aria-pressed="false" title="Alternar tema" aria-label="Alternar tema oscuro claro">
+          <svg id="themeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true"></svg>
+          <span id="themeLabel" style="font-weight:700;color:var(--muted)">Modo oscuro</span>
+        </button>
+
+        <button class="cta-primary" id="openCarta">Ver carta</button>
+        <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="mobileMenu">☰</button>
+      </div>
+    </div>
+
+    <div id="mobileMenu" style="display:none;background:var(--paper);border-top:1px solid var(--glass-2);padding:0.6rem 1rem">
+      <a href="nosotros.html" style="display:block;padding:0.6rem 0;color:var(--muted)">Nosotros</a>
+      <a href="carta.html" style="display:block;padding:0.6rem 0;color:var(--muted)">Carta</a>
+      <a href="contacto.html" style="display:block;padding:0.6rem 0;color:var(--muted)">Contacto</a>
+    </div>
+  </nav>
+
+  <main class="container" id="main">
+    <section class="hero" aria-labelledby="heroTitle">
+      <div class="hero-card" role="region" aria-labelledby="heroTitle">
+        <h2 id="heroTitle">Galletas artesanales — Carta</h2>
+        <p>Recién horneadas, empaques corporativos y opciones personalizadas. Explora, prueba y pide desde aquí.</p>
+
+        <div class="meta">
+          <button class="btn btn-outline" id="filtersBtn" title="Abrir filtros">Filtros</button>
+          <button class="btn btn-outline" id="sortBtn" title="Ordenar">Ordenar</button>
+          <button class="btn btn-primary" id="btnPresupuesto">Solicitar cotización</button>
+          <span style="font-size:0.95rem;color:var(--muted)">Pedidos mínimos: <strong>50 unidades</strong></span>
+        </div>
+
+        <div class="slider-wrap" aria-label="Productos destacados">
+          <h3 style="margin:0.8rem 0 0.4rem;color:var(--accent)">Productos destacados</h3>
+
+          <div class="slider" id="slider" tabindex="0" aria-roledescription="carrusel">
+            <article class="slide" data-id="Galleta de Mantequilla">
+              <div class="slide-inner" tabindex="0" aria-label="Galleta de Mantequilla, ver detalles">
+                <img loading="lazy" src="mantequilla2.webp" alt="Galleta de mantequilla">
+                <h3>Galleta de Mantequilla</h3>
+                <p>Textura crujiente y sabor tradicional — empaque individual o caja corporativa.</p>
+                <div class="actions">
+                  <button class="btn btn-outline" data-action="ver" data-product="Galleta de Mantequilla">Ver</button>
+                  <button class="btn add-anim btn-primary" data-action="add" data-product="Galleta de Mantequilla">Agregar</button>
+                  <div class="price">$3.000</div>
+                  <div class="heart" title="Favorito" role="button" aria-pressed="false" tabindex="0">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.333-4.333-9-7.333C0.667 10.333 2 6 6 5c2-.5 3-1 6 2 3-3 4-2.5 6-2 4 .833 5.333 5.333 3 8.667C19.333 16.667 12 21 12 21z"/></svg>
+                  </div>
+                  <span class="cart-burst" aria-hidden="true"></span>
+                </div>
+              </div>
+            </article>
+
+            <article class="slide" data-id="Galleta Chocolate Intenso">
+              <div class="slide-inner" tabindex="0" aria-label="Galleta Chocolate Intenso, ver detalles">
+                <img loading="lazy" src="chocolate intenso 2.webp" alt="Galleta chocolate">
+                <h3>Galleta Chocolate Intenso</h3>
+                <p>Receta premium con cacao seleccionado. Ideal para cajas regalo.</p>
+                <div class="actions">
+                  <button class="btn btn-outline" data-action="ver" data-product="Galleta Chocolate Intenso">Ver</button>
+                  <button class="btn add-anim btn-primary" data-action="add" data-product="Galleta Chocolate Intenso">Agregar</button>
+                  <div class="price">$3.200</div>
+                  <div class="heart" title="Favorito" role="button" aria-pressed="false" tabindex="0">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.333-4.333-9-7.333C0.667 10.333 2 6 6 5c2-.5 3-1 6 2 3-3 4-2.5 6-2 4 .833 5.333 5.333 3 8.667C19.333 16.667 12 21 12 21z"/></svg>
+                  </div>
+                  <span class="cart-burst" aria-hidden="true"></span>
+                </div>
+              </div>
+            </article>
+
+            <article class="slide" data-id="Galleta Avena y Miel">
+              <div class="slide-inner" tabindex="0" aria-label="Galleta Avena y Miel, ver detalles">
+                <img loading="lazy" src="avena y miel 2.webp" alt="Galleta avena">
+                <h3>Galleta Avena y Miel</h3>
+                <p>Opción integral con miel natural y textura consistente — opción saludable.</p>
+                <div class="actions">
+                  <button class="btn btn-outline" data-action="ver" data-product="Galleta Avena y Miel">Ver</button>
+                  <button class="btn add-anim btn-primary" data-action="add" data-product="Galleta Avena y Miel">Agregar</button>
+                  <div class="price">$3.500</div>
+                  <div class="heart" title="Favorito" role="button" aria-pressed="false" tabindex="0">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.333-4.333-9-7.333C0.667 10.333 2 6 6 5c2-.5 3-1 6 2 3-3 4-2.5 6-2 4 .833 5.333 5.333 3 8.667C19.333 16.667 12 21 12 21z"/></svg>
+                  </div>
+                  <span class="cart-burst" aria-hidden="true"></span>
+                </div>
+              </div>
+            </article>
+          </div>
+
+          <div class="slider-controls" id="dots" aria-hidden="false"></div>
+          <button id="sliderToggle" class="slider-toggle" aria-expanded="false" aria-label="Expandir slider">⤢</button>
+          <div id="sliderPreview" class="slider-preview" aria-hidden="true" role="status" aria-live="polite"></div>
+        </div>
+
+      </div>
+
+      <aside class="hero-aside" aria-label="Datos rápidos">
+        <h4>Datos clave</h4>
+        <p>Atendemos eventos corporativos, cajas regalo y pedidos recurrentes.</p>
+        <ul style="margin:0;padding-left:1rem;color:var(--muted)">
+          <li>Plazo de producción: 3-7 días hábiles</li>
+          <li>Empaque sostenible y personalizado</li>
+          <li>Soporte para eventos y envíos programados</li>
+        </ul>
+      </aside>
+    </section>
+
+    <section id="carta" aria-labelledby="cartaTitle">
+      <h2 id="cartaTitle" style="margin-top:1rem;color:var(--accent)">Carta de Productos</h2>
+      <p style="color:var(--muted);margin-top:0.25rem">Selecciona un producto para ver detalles o añadir al carrito.</p>
+
+      <div class="grid" id="productGrid">
+        <div class="card" data-prod="Galleta de Mantequilla">
+          <img loading="lazy" src="mantequilla en caja.webp" alt="Galleta de mantequilla">
+          <h3>Galleta de Mantequilla</h3>
+          <p style="color:var(--muted)">Presentación: individual / caja 12 / caja corporativa (50+).</p>
+          <div style="display:flex;gap:0.6rem;margin-top:0.6rem;align-items:center">
+            <button class="btn btn-outline" data-action="ver" data-product="Galleta de Mantequilla">Ver</button>
+            <button class="btn btn-primary add-anim" data-action="add" data-product="Galleta de Mantequilla">Agregar</button>
+            <div style="margin-left:auto;font-weight:900;color:var(--accent-2)">$3.000</div>
+          </div>
+        </div>
+
+        <div class="card" data-prod="Galleta Chocolate Intenso">
+          <img loading="lazy" src="chocolate en caja.webp" alt="Galleta chocolate">
+          <h3>Galleta Chocolate Intenso</h3>
+          <p style="color:var(--muted)">Caja 12 / caja regalo / caja corporativa (50+).</p>
+          <div style="display:flex;gap:0.6rem;margin-top:0.6rem;align-items:center">
+            <button class="btn btn-outline" data-action="ver" data-product="Galleta Chocolate Intenso">Ver</button>
+            <button class="btn btn-primary add-anim" data-action="add" data-product="Galleta Chocolate Intenso">Agregar</button>
+            <div style="margin-left:auto;font-weight:900;color:var(--accent-2)">$3.200</div>
+          </div>
+        </div>
+
+        <div class="card" data-prod="Galleta Avena y Miel">
+          <img loading="lazy" src="avena y miel 2.webp" alt="Galleta avena">
+          <h3>Galleta Avena y Miel</h3>
+          <p style="color:var(--muted)">Individual / caja 12 / caja corporativa (50+).</p>
+          <div style="display:flex;gap:0.6rem;margin-top:0.6rem;align-items:center">
+            <button class="btn btn-outline" data-action="ver" data-product="Galleta Avena y Miel">Ver</button>
+            <button class="btn btn-primary add-anim" data-action="add" data-product="Galleta Avena y Miel">Agregar</button>
+            <div style="margin-left:auto;font-weight:900;color:var(--accent-2)">$3.500</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contacto" aria-labelledby="contactTitle" style="margin-top:1.25rem">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:1rem;background:var(--accent);padding:14px;border-radius:12px;color:#fff">
+        <div>
+          <h3 id="contactTitle" style="margin:0">Cotizaciones y pedidos</h3>
+          <p style="margin:0.35rem 0 0;color:rgba(255,255,255,0.95)">Solicita una cotización según cantidad, empaque y fecha.</p>
+        </div>
+        <div class="actions">
+          <button class="btn btn-outline" id="waBtnHeader" style="background:transparent;border:1px solid rgba(255,255,255,0.12);color:#fff">WhatsApp</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <aside class="panel" id="panel" aria-hidden="true" aria-labelledby="panelTitle">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <h3 id="panelTitle">Detalle de producto</h3>
+      <button class="close" id="closePanel" aria-label="Cerrar panel">✕</button>
+    </div>
+    <div id="panelContent" style="margin-top:0.6rem"></div>
+    <div style="margin-top:1rem;display:flex;gap:0.6rem;align-items:center">
+      <label for="qty" style="font-weight:700">Cantidad</label>
+      <input id="qty" type="number" min="1" value="12" style="width:88px;padding:0.45rem;border-radius:8px;border:1px solid var(--glass-2)">
+      <button class="btn btn-primary" id="panelAdd">Agregar al carrito</button>
+    </div>
+  </aside>
+
+  <div id="lightbox" style="display:none;position:fixed;inset:0;background:rgba(10,8,7,0.6);z-index:400;align-items:center;justify-content:center;">
+    <button id="closeLight" aria-label="Cerrar vista" style="position:absolute;right:18px;top:18px;background:transparent;border:none;color:#fff;font-size:22px;cursor:pointer">✕</button>
+    <img id="lightImg" src="" alt="" style="max-width:92%;max-height:88%;border-radius:10px;box-shadow:0 20px 60px rgba(0,0,0,0.6)">
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <strong style="color:#fff">Cookie Duo</strong>
+        <p style="margin:6px 0 0;color:rgba(255,255,255,0.9)">Galletas artesanales · Empaques responsables</p>
+      </div>
+      <div>
+        <strong style="color:#fff">Contacto</strong>
+        <p style="margin:6px 0 0;color:rgba(255,255,255,0.9)">+57 301 2548388</p>
+      </div>
+      <div>
+        <strong style="color:#fff">Síguenos</strong>
+        <div style="display:flex;gap:0.5rem;margin-top:0.6rem">
+          <a href="https://instagram.com/cookieduo_oficial" aria-label="Instagram" style="color:#f0ddcf">@cookieduo_oficial</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modern WhatsApp pill (with badge) -->
+  <button class="whatsapp-pill" id="waFloat" aria-label="Contactar por WhatsApp" title="Contactar por WhatsApp" type="button">
+    <span class="wa-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" width="18" height="18" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M12.04 2C6.4 2 1.92 6.32 1.92 11.76c0 2 .5 3.9 1.45 5.44L2 22l4.8-1.26c1.06.3 2.2.46 3.24.46 5.64 0 10.12-4.32 10.12-9.76C20.16 6.32 15.68 2 12.04 2z" fill="#fff"/>
+      </svg>
+    </span>
+    <span class="wa-label">Chatear</span>
+    <span class="wa-badge" id="waCount" aria-live="polite" aria-atomic="true" style="display:none">0</span>
+  </button>
+
+  <script>
+    /* ---------------- Data ---------------- */
+    const PRODUCTS = {
+      'Galleta de Mantequilla': {price:3000,desc:'Clásica, crujiente y con mantequilla real. Empaque individual o caja corporativa.'},
+      'Galleta Chocolate Intenso': {price:3200,desc:'Cacao premium y textura suave. Ideal para regalos y cajas corporativas.'},
+      'Galleta Avena y Miel': {price:3500,desc:'Opción integral con miel natural y textura consistente.'}
+    };
+
+    /* ---------------- Theme logic (light/dark) ---------------- */
+    const root = document.documentElement;
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeLabel = document.getElementById('themeLabel');
+
+    function setTheme(name){
+      if(name === 'dark'){
+        root.classList.add('dark');
+        root.setAttribute('data-theme','dark');
+        themeToggle.setAttribute('aria-pressed','true');
+        themeLabel.textContent = 'Modo claro';
+        themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 0111.21 3 7 7 0 1021 12.79z" fill="#fff"/>';
+      } else {
+        root.classList.remove('dark');
+        root.removeAttribute('data-theme');
+        themeToggle.setAttribute('aria-pressed','false');
+        themeLabel.textContent = 'Modo oscuro';
+        themeIcon.innerHTML = '<path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zM1 13h3v-2H1v2zm10 8h2v-3h-2v3z" fill="#04243f"/>';
+      }
+      try{ localStorage.setItem('site-theme', name); }catch(e){}
+    }
+    (function initTheme(){
+      const saved = localStorage.getItem('site-theme');
+      if(saved) { setTheme(saved); return; }
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      setTheme(prefersDark ? 'dark' : 'light');
+    })();
+    themeToggle.addEventListener('click', ()=> setTheme(root.classList.contains('dark') ? 'light' : 'dark'));
+
+    /* ---------------- Slider / UI interactions ---------------- */
+    const slider = document.getElementById('slider');
+    const slides = Array.from(slider.querySelectorAll('.slide'));
+    const dotsWrap = document.getElementById('dots');
+    const preview = document.getElementById('sliderPreview');
+    const sliderToggle = document.getElementById('sliderToggle');
+    const sliderWrap = document.querySelector('.slider-wrap');
+    const slidesArr = slides.slice();
+
+    slidesArr.forEach((s,i)=>{
+      const d = document.createElement('button'); d.className='dot'; d.setAttribute('aria-label',`Ir al producto ${i+1}`);
+      d.addEventListener('click', ()=> s.scrollIntoView({behavior:'smooth',inline:'center'}));
+      dotsWrap.appendChild(d);
+    });
+    const dots = Array.from(dotsWrap.children);
+
+    function syncDots(){
+      const center = slider.scrollLeft + slider.offsetWidth/2;
+      slidesArr.forEach((s,i)=>{
+        const r = s.offsetLeft + s.offsetWidth/2;
+        if(Math.abs(r-center) < s.offsetWidth/2) dots[i].classList.add('active'); else dots[i].classList.remove('active');
+      });
+    }
+    slider.addEventListener('scroll', throttle(syncDots,100));
+    syncDots();
+
+    function showPreviewForSlide(s){
+      const img = s.querySelector('img');
+      const title = s.querySelector('h3')?.textContent || '';
+      const price = PRODUCTS[title] ? PRODUCTS[title].price : '';
+      preview.innerHTML = `<img src="${img.src}" alt="${title}"><div><strong style="display:block;color:var(--accent)">${title}</strong><small style="color:var(--muted)">Precio: $${price.toLocaleString()}</small></div>`;
+      preview.setAttribute('aria-hidden','false');
+    }
+    function hidePreview(){ preview.setAttribute('aria-hidden','true'); }
+
+    slidesArr.forEach(s=>{
+      const inner = s.querySelector('.slide-inner');
+      inner.addEventListener('mousemove', (ev)=>{
+        const rect = inner.getBoundingClientRect();
+        const x = ev.clientX - rect.left; const y = ev.clientY - rect.top;
+        const rx = (y - rect.height/2) / rect.height * -6;
+        const ry = (x - rect.width/2) / rect.width * 6;
+        inner.style.transform = `perspective(700px) rotateX(${rx}deg) rotateY(${ry}deg) scale(1.01)`;
+        s.style.boxShadow = '0 18px 40px rgba(6,40,120,0.12)';
+      });
+      inner.addEventListener('mouseleave', ()=>{ inner.style.transform='none'; s.style.boxShadow='0 10px 24px rgba(6,40,120,0.04)'; });
+      s.addEventListener('mouseenter', ()=> showPreviewForSlide(s));
+      s.addEventListener('mouseleave', hidePreview);
+      s.addEventListener('focusin', ()=> showPreviewForSlide(s));
+      s.addEventListener('focusout', hidePreview);
+    });
+
+    sliderToggle.addEventListener('click', ()=>{
+      const expanded = sliderWrap.classList.toggle('expanded');
+      sliderToggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+      sliderToggle.textContent = expanded ? '×' : '⤢';
+      if(expanded) slider.focus();
+    });
+
+    /* ---------------- Cart / panel / toast ---------------- */
+    let cart = {};
+    const panel = document.getElementById('panel');
+    const panelContent = document.getElementById('panelContent');
+    const waCountEl = document.getElementById('waCount');
+    const waFloat = document.getElementById('waFloat');
+
+    function animateAdd(button){
+      const burst = (button.parentElement.querySelector('.cart-burst') || button.querySelector('.cart-burst'));
+      if(!burst) return;
+      burst.style.opacity = 1; burst.style.transform = 'scale(1.6)';
+      setTimeout(()=> { burst.style.opacity = 0; burst.style.transform = 'scale(0.6)'; }, 520);
+    }
+
+    document.body.addEventListener('click', (e)=>{
+      const heart = e.target.closest('.heart');
+      if(heart){
+        const pressed = heart.classList.toggle('liked');
+        heart.setAttribute('aria-pressed', pressed ? 'true' : 'false');
+        heart.animate([{transform:'scale(1)'},{transform:'scale(1.08)'},{transform:'scale(1)'}],{duration:260, easing:'ease-out'});
+      }
+    });
+
+    document.body.addEventListener('click', (e)=>{
+      const btn = e.target.closest('button[data-action]');
+      if(!btn) return;
+      const action = btn.dataset.action;
+      const product = btn.dataset.product;
+      if(action === 'ver') openPanel(product);
+      if(action === 'add') {
+        addToCart(product, 12);
+        animateAdd(btn);
+        btn.classList.add('shake');
+        setTimeout(()=> btn.classList.remove('shake'), 420);
+      }
+    });
+
+    function openPanel(product){
+      const info = PRODUCTS[product];
+      if(!info) return;
+      panelContent.innerHTML = `
+        <div style="display:flex;gap:0.8rem;align-items:flex-start">
+          <img src="${findImageForProduct(product)}" alt="${product}" style="width:120px;height:90px;object-fit:cover;border-radius:8px;">
+          <div>
+            <strong style="display:block;color:var(--accent);font-size:1.05rem">${product}</strong>
+            <p style="margin:0.4rem 0;color:var(--muted)">${info.desc}</p>
+            <div style="margin-top:0.6rem;font-weight:900;color:var(--accent-2)">Precio referencia: $${info.price.toLocaleString()}</div>
+          </div>
+        </div>
+        <div style="margin-top:1rem;">
+          <label style="font-weight:700">Notas para el pedido</label>
+          <textarea id="notes" placeholder="Ej. Empaque con logo, entrega 10/12" style="width:100%;height:90px;border-radius:8px;border:1px solid var(--glass-2);padding:0.6rem;margin-top:0.4rem"></textarea>
+        </div>
+      `;
+      panel.classList.add('open'); panel.setAttribute('aria-hidden','false');
+      document.getElementById('qty').focus();
+    }
+
+    document.getElementById('closePanel').addEventListener('click', ()=>{ panel.classList.remove('open'); panel.setAttribute('aria-hidden','true'); });
+
+    function addToCart(product, qty){
+      if(!PRODUCTS[product]) { showToast('Producto no disponible'); return; }
+      cart[product] = (cart[product] || 0) + qty;
+      updateCartUI();
+      showToast(`${qty} x ${product} añadidos al carrito.`);
+    }
+
+    function updateCartUI(){
+      // update desktop "cart count" near CTA-primary (if exists)
+      const btn = document.querySelector('.cta-primary');
+      const total = Object.values(cart).reduce((a,b)=>a+b,0);
+      let span = document.getElementById('cartCount');
+      if(total>0){
+        if(!span && btn){
+          span = document.createElement('span');
+          span.id='cartCount';
+          span.style.cssText='display:inline-block;background:var(--accent-2);color:#fff;padding:6px 10px;border-radius:999px;font-weight:800;margin-left:8px;font-size:0.9rem';
+          btn.parentNode.insertBefore(span, btn.nextSibling);
+        }
+        if(span) span.textContent = total;
+      } else { if(span) span.remove(); }
+
+      // update WhatsApp pill badge
+      if(total > 0){
+        waCountEl.style.display = 'inline-block';
+        waCountEl.textContent = total;
+        waCountEl.setAttribute('aria-hidden','false');
+      } else {
+        waCountEl.style.display = 'none';
+        waCountEl.setAttribute('aria-hidden','true');
+      }
+    }
+
+    function showToast(text){
+      let t = document.getElementById('toast');
+      if(!t){
+        t = document.createElement('div'); t.id='toast';
+        t.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:96px;background:var(--accent);color:#fff;padding:10px 16px;border-radius:10px;z-index:500;box-shadow:0 12px 30px rgba(6,40,120,0.12);';
+        document.body.appendChild(t);
+      }
+      t.textContent = text;
+      t.style.opacity = '1';
+      try{ t.animate([{opacity:1, transform:'translateY(0)'},{opacity:0, transform:'translateY(8px)'}],{duration:2400,delay:900}); }catch(e){}
+      setTimeout(()=>{ t.style.opacity='0'; }, 2400);
+    }
+
+    function findImageForProduct(product){
+      const mapping = {
+        'Galleta de Mantequilla':'mantequilla en caja.webp',
+        'Galleta Chocolate Intenso':'chocolate en caja.webp',
+        'Galleta Avena y Miel':'avena y miel 2.webp'
+      };
+      return mapping[product] || '';
+    }
+
+    function openLightbox(src){
+      const box = document.getElementById('lightbox');
+      const img = document.getElementById('lightImg');
+      img.src = src; box.style.display = 'flex';
+      try{ box.animate([{opacity:0},{opacity:1}],{duration:180}); }catch(e){}
+    }
+    function closeLightbox(){ const box=document.getElementById('lightbox'); try{ box.animate([{opacity:1},{opacity:0}],{duration:180}); }catch(e){}; setTimeout(()=>box.style.display='none',180); }
+
+    document.body.addEventListener('click', (e)=>{
+      const img = e.target.closest('img');
+      if(img && (img.closest('.slide') || img.closest('.card'))){
+        if(img.src) openLightbox(img.src);
+      }
+    });
+    document.getElementById('closeLight').addEventListener('click', closeLightbox);
+    document.getElementById('lightbox').addEventListener('click', (e)=> { if(e.target.id==='lightbox') closeLightbox(); });
+
+    const menuToggle = document.getElementById('menuToggle'), mobileMenu = document.getElementById('mobileMenu');
+    menuToggle && menuToggle.addEventListener('click', ()=>{
+      const open = mobileMenu.style.display === 'block';
+      mobileMenu.style.display = open ? 'none' : 'block';
+      menuToggle.setAttribute('aria-expanded', open ? 'false' : 'true');
+    });
+
+    /* ---------------- Modern WhatsApp pill ---------------- */
+    const waNumber = '573012548388';
+    waFloat.addEventListener('click', ()=>{
+      const items = Object.entries(cart);
+      let text = '';
+      if(items.length === 0){
+        text = 'Hola 👋, quisiera información y cotización.';
+      } else {
+        let total = 0;
+        const lines = ['Hola 👋, quiero realizar este pedido:'];
+        items.forEach(([name, qty]) => {
+          const price = (PRODUCTS[name] ? PRODUCTS[name].price : 0);
+          total += price * qty;
+          lines.push(`- ${qty} x ${name} — $${(price * qty).toLocaleString()}`);
+        });
+        lines.push('');
+        lines.push(`Total referencia: $${total.toLocaleString()}`);
+        lines.push('');
+        lines.push('Por favor confirmar disponibilidad y precio final. Gracias!');
+        text = lines.join('\n');
+      }
+      window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(text)}`, '_blank', 'noopener');
+    });
+
+    document.getElementById('waBtnHeader').addEventListener('click', ()=> waFloat.click());
+
+    document.addEventListener('keydown', (ev)=>{
+      if(ev.key==='ArrowRight') { slider.scrollBy({left: slider.offsetWidth * 0.5, behavior:'smooth'}); }
+      if(ev.key==='ArrowLeft') { slider.scrollBy({left: -slider.offsetWidth * 0.5, behavior:'smooth'}); }
+      if(ev.key==='Escape'){ panel.classList.remove('open'); panel.setAttribute('aria-hidden','true'); closeLightbox(); mobileMenu.style.display='none'; }
+    });
+
+    function throttle(fn, wait){ let time=Date.now(); return function(){ if((time+wait-Date.now())<0){ fn(); time=Date.now(); } } }
+
+    // init
+    (function init(){
+      syncDots();
+      preview.setAttribute('aria-hidden','true');
+      slidesArr.forEach(s=> s.addEventListener('keydown', (e)=>{ if(e.key==='Enter') openPanel(s.dataset.id); }));
+      // mobile double-tap quick-add
+      let lastTap = 0;
+      slider.addEventListener('touchend', (e)=> {
+        const now = Date.now(); const diff = now - lastTap;
+        if(diff < 350 && e.changedTouches[0]) {
+          const el = document.elementFromPoint(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+          const slide = el && el.closest('.slide');
+          if(slide){ addToCart(slide.dataset.id, 12); showToast('Añadido por doble toque'); }
+        }
+        lastTap = now;
+      });
+
+      // make sure wa badge starts hidden and cart empty
+      updateCartUI();
+    })();
+  </script>
+</body>
+</html>

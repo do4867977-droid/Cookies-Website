@@ -1,0 +1,638 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cookie Duo — Pedido por WhatsApp</title>
+  <meta name="description" content="Formulario de pedido por WhatsApp — Cookie Duo" />
+  <style>
+    /* -------------------------- Tokens (light default) -------------------------- */
+    :root{
+      --bg-top: #eaf4ff;
+      --bg-bottom:#ffffff;
+      --paper: #ffffff;
+      --accent: #0b6bf0;
+      --accent-2: #0649c1;
+      --muted: #2b597f;
+      --text: #14344b;
+      --glass: rgba(255,255,255,0.98);
+      --radius:12px;
+      --maxW:980px;
+      --shadow: 0 18px 40px rgba(6,40,120,0.08);
+      --panel-shadow: -20px 0 48px rgba(6,40,120,0.12);
+      --focus: 3px solid rgba(11,107,240,0.12);
+      --touch-min:44px;
+    }
+
+    /* dark theme overrides */
+    :root.dark, :root[data-theme="dark"] {
+      --bg-top: #041226;
+      --bg-bottom:#02101a;
+      --paper: #071428;
+      --accent: #3ea0ff;
+      --accent-2: #2b6ea8;
+      --muted: #98c7ff;
+      --text: #dbeeff;
+      --shadow: 0 18px 40px rgba(0,0,0,0.6);
+      --panel-shadow: -20px 0 48px rgba(0,0,0,0.6);
+      --focus: 3px solid rgba(62,160,255,0.14);
+    }
+
+    /* -------------------------- Base -------------------------- */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family:Inter,system-ui,Arial,sans-serif;
+      background:linear-gradient(180deg,var(--bg-top),var(--bg-bottom));
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      transition:background .22s ease,color .22s ease;
+    }
+
+    .wrap{
+      width:100%;
+      max-width:var(--maxW);
+      background:var(--paper);
+      border-radius:16px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:visible;
+      border: 1px solid rgba(0,0,0,0.04);
+    }
+
+    header{display:flex;gap:12px;align-items:center;margin-bottom:8px}
+    .logo{width:56px;height:56px;border-radius:10px;overflow:hidden;flex:0 0 56px}
+    .logo img{width:100%;height:100%;object-fit:cover;display:block}
+    h1{margin:0;font-size:1.15rem;color:var(--accent-2)}
+    p.lead{margin:6px 0 0;color:var(--muted);font-size:0.95rem}
+
+    /* theme toggle in header */
+    .header-controls { margin-left:auto; display:flex; gap:8px; align-items:center }
+    .theme-toggle {
+      display:inline-flex;align-items:center;gap:8px;padding:8px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);background:transparent;color:var(--text);
+      cursor:pointer;font-weight:700;font-size:0.95rem;
+    }
+    :root.dark .theme-toggle { border-color: rgba(255,255,255,0.06) }
+
+    /* form layout */
+    form{margin-top:12px;display:grid;grid-template-columns:1fr 360px;gap:16px}
+    @media (max-width:980px){ form{grid-template-columns:1fr} }
+
+    label{display:block;font-weight:700;margin-bottom:6px;color:var(--accent)}
+    input[type="text"], input[type="tel"], input[type="number"], input[type="date"], select, textarea{
+      width:100%;padding:10px;border-radius:10px;border:1px solid rgba(6,40,120,0.08);background:var(--paper);font-size:0.95rem;color:var(--text);
+      transition: border-color .14s ease, box-shadow .14s ease, background .14s ease;
+    }
+    :root.dark input, :root.dark textarea, :root.dark select { border-color: rgba(255,255,255,0.06); background: rgba(255,255,255,0.02); }
+
+    textarea{min-height:120px;resize:vertical}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .full{grid-column:1/-1}
+    .actions{display:flex;gap:8px;align-items:center;margin-top:12px;flex-wrap:wrap}
+
+    .btn{padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:800;min-height:var(--touch-min)}
+    .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#fff}
+    .btn-ghost{background:transparent;border:1px solid rgba(6,40,120,0.08);color:var(--accent)}
+    :root.dark .btn-ghost{ border-color: rgba(255,255,255,0.06); color:var(--accent) }
+
+    .hint{font-size:0.9rem;color:var(--muted);margin-top:6px}
+
+    /* summary */
+    .summary{
+      background:linear-gradient(180deg,var(--paper), rgba(244,251,255,0.06));
+      padding:14px;border-radius:12px;border:1px solid rgba(6,40,120,0.04);
+      color:var(--muted);
+    }
+    .summary h3{margin:0 0 6px 0;font-size:1rem;color:var(--accent)}
+    .summary .line{display:flex;justify-content:space-between;margin:8px 0;color:var(--muted)}
+    .price{font-weight:900;color:var(--accent-2)}
+    .small{font-size:0.9rem;color:var(--muted)}
+
+    /* slide-panel (right desktop / bottom mobile) */
+    .slide-panel {
+      position:fixed;
+      top:0;
+      right:-420px;
+      width:380px;
+      height:100%;
+      background: var(--paper);
+      box-shadow: var(--panel-shadow);
+      transition: right 320ms cubic-bezier(.2,.9,.25,1), transform 260ms ease;
+      z-index:1200;
+      padding:18px;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+      border-left:1px solid rgba(6,40,120,0.04);
+    }
+    .slide-panel.open { right:0; transform:translateY(0); }
+    .panel-close{margin-left:auto;background:transparent;border:none;font-size:20px;cursor:pointer;color:var(--muted) }
+    .panel-head{display:flex;align-items:center;gap:12px}
+
+    /* mobile: panel slides from bottom and covers part of screen */
+    @media (max-width:640px){
+      .slide-panel{
+        right:0;
+        left:0;
+        bottom:-100%;
+        top:auto;
+        width:100%;
+        height:62%;
+        border-left:none;
+        border-top-left-radius:12px;
+        border-top-right-radius:12px;
+        transform: translateY(100%);
+      }
+      .slide-panel.open{ transform: translateY(0); bottom:0 }
+    }
+
+    /* overlay/backdrop */
+    .panel-backdrop{
+      position:fixed;inset:0;background:rgba(3,10,30,0.28);opacity:0;visibility:hidden;transition:opacity 220ms ease;z-index:1100;
+    }
+    .panel-backdrop.show{opacity:1;visibility:visible;}
+
+    /* toast */
+    #toast{position:fixed;left:50%;transform:translateX(-50%);bottom:28px;background:var(--accent);color:#fff;padding:10px 16px;border-radius:10px;box-shadow:0 12px 30px rgba(6,40,120,0.18);display:none;z-index:1300}
+
+    /* focus */
+    input:focus, select:focus, textarea:focus, button:focus{outline:none;box-shadow:var(--focus);border-radius:8px}
+
+    /* back-to-top button (floating) with animation */
+    .back-to-top {
+      position:fixed;
+      left:16px;
+      bottom:20px;
+      z-index:1400;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 12px;
+      border-radius:999px;
+      background:linear-gradient(90deg,var(--accent),var(--accent-2));
+      color:#fff;
+      font-weight:800;
+      box-shadow:0 18px 36px rgba(6,40,120,0.12);
+      border:none;
+      cursor:pointer;
+      transform:translateY(6px) scale(.95);
+      transition:opacity .18s ease, transform .28s cubic-bezier(.2,.9,.3,1), box-shadow .12s ease;
+      opacity:0; visibility:hidden;
+    }
+    .back-to-top.show {
+      opacity:1; visibility:visible;
+      transform:translateY(0) scale(1);
+      animation: popIn 420ms cubic-bezier(.2,.9,.25,1);
+    }
+    .back-to-top:active{ transform:translateY(2px) scale(.98) }
+    .back-to-top .icon { width:20px; height:20px; display:grid; place-items:center; background:rgba(255,255,255,0.12); border-radius:8px }
+    .back-to-top .label { font-size:0.95rem }
+    @media (max-width:520px){ .back-to-top .label{ display:none } .back-to-top{ left:12px; bottom:14px; padding:10px; border-radius:12px } }
+
+    /* pop/bounce animation */
+    @keyframes popIn {
+      0% { transform: translateY(12px) scale(.92); opacity:0 }
+      60% { transform: translateY(-6px) scale(1.05); opacity:1 }
+      100% { transform: translateY(0) scale(1) }
+    }
+    /* small click pulse for tactile feedback */
+    @keyframes clickPulse {
+      0% { transform: scale(1); box-shadow:0 18px 36px rgba(6,40,120,0.12) }
+      50% { transform: scale(.96); box-shadow:0 8px 18px rgba(6,40,120,0.08) }
+      100% { transform: scale(1); }
+    }
+
+    .muted-small{font-size:0.88rem;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div class="wrap" role="main" aria-labelledby="title">
+    <header>
+      <div class="logo" aria-hidden="true">
+        <img src="cookies.jpg" alt="Cookie Duo">
+      </div>
+      <div>
+        <h1 id="title">Pedido por WhatsApp — Cookie Duo</h1>
+        <p class="lead">Rellena el formulario y confirma el pedido por WhatsApp. Usa "Ver resumen" para revisar antes de enviar.</p>
+      </div>
+
+      <div class="header-controls" aria-hidden="false">
+        <button id="themeToggle" class="theme-toggle" aria-pressed="false" title="Alternar tema" aria-label="Alternar tema oscuro/claro">
+          <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"></svg>
+          <span id="themeLabel" class="muted-small">Modo oscuro</span>
+        </button>
+      </div>
+    </header>
+
+    <form id="orderForm" novalidate>
+      <div class="left">
+        <fieldset>
+          <label for="name">Tu nombre *</label>
+          <input id="name" name="name" type="text" autocomplete="name" placeholder="Ej. María Pérez" required>
+
+          <div style="height:12px"></div>
+
+          <label for="company">Empresa / Institución (opcional)</label>
+          <input id="company" name="company" type="text" autocomplete="organization" placeholder="Ej. Acme S.A.">
+
+          <div style="height:12px"></div>
+
+          <label for="phone">Teléfono / WhatsApp *</label>
+          <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="+57 301 2345678" required pattern="^[0-9+()\\s-]{6,25}$">
+          <div class="hint">Incluye el código de país (ej. +57).</div>
+
+          <div style="height:12px"></div>
+
+          <label for="product">Producto *</label>
+          <select id="product" name="product" required>
+            <option value="">— Selecciona un producto —</option>
+            <option value="Galleta de Mantequilla">Galleta de Mantequilla</option>
+            <option value="Galleta Chocolate Intenso">Galleta Chocolate Intenso</option>
+            <option value="Galleta Avena y Miel">Galleta Avena y Miel</option>
+            <option value="Caja Corporativa 50+">Caja Corporativa 50+</option>
+          </select>
+
+          <div style="height:12px"></div>
+
+          <div class="row">
+            <div>
+              <label for="qty">Cantidad *</label>
+              <input id="qty" name="qty" type="number" min="1" value="12" required>
+            </div>
+            <div>
+              <label for="date">Fecha de entrega</label>
+              <input id="date" name="date" type="date" min="">
+            </div>
+          </div>
+
+          <div style="height:12px"></div>
+
+          <label for="notes">Notas / Mensaje (opcional)</label>
+          <textarea id="notes" name="notes" placeholder="Ej. Empaque con logo, entrega mañana en la mañana..."></textarea>
+
+          <div class="actions">
+            <button type="submit" class="btn btn-primary">Enviar por WhatsApp</button>
+            <button type="button" id="saveBtn" class="btn btn-ghost">Guardar info local</button>
+            <button type="button" id="openSummaryBtn" class="btn btn-ghost" aria-controls="orderPanel" aria-expanded="false">Ver resumen</button>
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="right" aria-hidden="true">
+        <aside class="summary" aria-live="polite" aria-atomic="true">
+          <h3>Resumen rápido</h3>
+          <div class="line"><div class="small">Producto</div><div id="sumProduct" class="small">—</div></div>
+          <div class="line"><div class="small">Cantidad</div><div id="sumQty" class="small">—</div></div>
+          <div class="line"><div class="small">Fecha entrega</div><div id="sumDate" class="small">—</div></div>
+          <div class="line"><div class="small">Contacto</div><div id="sumPhone" class="small">—</div></div>
+          <hr style="border:none;border-top:1px dashed rgba(6,40,120,0.06);margin:10px 0">
+          <div class="line"><div class="small">Precio referencia</div><div id="sumPrice" class="price">—</div></div>
+          <p style="margin:10px 0 0;color:var(--muted);font-size:0.9rem">Pulsa "Ver resumen" para una versión completa y desplegable del pedido.</p>
+        </aside>
+      </div>
+    </form>
+  </div>
+
+  <!-- slide panel + backdrop -->
+  <div id="panelBackdrop" class="panel-backdrop" tabindex="-1" aria-hidden="true"></div>
+
+  <aside id="orderPanel" class="slide-panel" role="dialog" aria-modal="true" aria-labelledby="panelTitle" aria-hidden="true">
+    <div class="panel-head">
+      <h3 id="panelTitle" style="margin:0;color:var(--accent)">Resumen del pedido</h3>
+      <button class="panel-close" id="closePanelBtn" aria-label="Cerrar resumen">✕</button>
+    </div>
+
+    <div style="flex:1;overflow:auto;padding-right:6px">
+      <div style="margin-top:8px">
+        <div style="margin-bottom:10px"><strong>Cliente</strong></div>
+        <div class="line"><div class="small">Nombre</div><div id="panelName" class="small">—</div></div>
+        <div class="line"><div class="small">Empresa</div><div id="panelCompany" class="small">—</div></div>
+        <div class="line"><div class="small">WhatsApp</div><div id="panelPhone" class="small">—</div></div>
+      </div>
+
+      <hr style="border:none;border-top:1px dashed rgba(6,40,120,0.06);margin:12px 0">
+
+      <div>
+        <div style="margin-bottom:10px"><strong>Pedido</strong></div>
+        <div class="line"><div class="small">Producto</div><div id="panelProduct" class="small">—</div></div>
+        <div class="line"><div class="small">Cantidad</div><div id="panelQty" class="small">—</div></div>
+        <div class="line"><div class="small">Fecha entrega</div><div id="panelDate" class="small">—</div></div>
+        <div style="margin-top:8px"><div class="small">Notas</div><div id="panelNotes" class="small">—</div></div>
+      </div>
+
+      <hr style="border:none;border-top:1px dashed rgba(6,40,120,0.06);margin:12px 0">
+
+      <div>
+        <div class="line"><div class="small">Precio referencia</div><div id="panelPrice" class="price">—</div></div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px;align-items:center;justify-content:space-between;padding-top:8px">
+      <button id="panelEditBtn" class="btn btn-ghost">Editar pedido</button>
+      <button id="panelSendBtn" class="btn btn-primary">Enviar por WhatsApp</button>
+    </div>
+  </aside>
+
+  <!-- Back to top button -->
+  <button id="backToTop" class="back-to-top" aria-hidden="true" aria-label="Regresar al inicio" title="Regresar al inicio">
+    <span class="icon" aria-hidden="true">
+      <!-- chevron-up icon -->
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+        <path d="M6 14l6-6 6 6" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </span>
+    <span class="label">Inicio</span>
+  </button>
+
+  <div id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (function(){
+      const WHATSAPP_NUMBER = '573012548388';
+
+      // theme toggling
+      const root = document.documentElement;
+      const themeToggle = document.getElementById('themeToggle');
+      const themeIcon = document.getElementById('themeIcon');
+      const themeLabel = document.getElementById('themeLabel');
+
+      function setTheme(name){
+        if(name === 'dark'){
+          root.classList.add('dark');
+          root.setAttribute('data-theme','dark');
+          themeToggle.setAttribute('aria-pressed','true');
+          themeLabel.textContent = 'Modo claro';
+          themeIcon.innerHTML = '<path d="M21 12.79A9 9 0 0111.21 3 7 7 0 1021 12.79z" fill="#fff"/>';
+        } else {
+          root.classList.remove('dark');
+          root.removeAttribute('data-theme');
+          themeToggle.setAttribute('aria-pressed','false');
+          themeLabel.textContent = 'Modo oscuro';
+          themeIcon.innerHTML = '<path d="M6.76 4.84l-1.8-1.79-1.41 1.41 1.79 1.8 1.42-1.42zM1 13h3v-2H1v2zm10 8h2v-3h-2v3zm7-3.16l1.8 1.79 1.41-1.41-1.79-1.8-1.42 1.42zM17 13a5 5 0 11-10 0 5 5 0 0110 0z" fill="#04243f"/>';
+        }
+        try{ localStorage.setItem('site-theme', name); }catch(e){}
+      }
+
+      function initTheme(){
+        const saved = localStorage.getItem('site-theme');
+        if(saved) { setTheme(saved); return; }
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        setTheme(prefersDark ? 'dark' : 'light');
+      }
+      initTheme();
+      themeToggle.addEventListener('click', ()=> setTheme(root.classList.contains('dark') ? 'light' : 'dark'));
+
+      // form controls
+      const form = document.getElementById('orderForm');
+      const nameEl = document.getElementById('name');
+      const companyEl = document.getElementById('company');
+      const phoneEl = document.getElementById('phone');
+      const productEl = document.getElementById('product');
+      const qtyEl = document.getElementById('qty');
+      const dateEl = document.getElementById('date');
+      const notesEl = document.getElementById('notes');
+      const saveBtn = document.getElementById('saveBtn');
+      const openSummaryBtn = document.getElementById('openSummaryBtn');
+
+      // inline summary nodes (desktop)
+      const sumProduct = document.getElementById('sumProduct');
+      const sumQty = document.getElementById('sumQty');
+      const sumDate = document.getElementById('sumDate');
+      const sumPhone = document.getElementById('sumPhone');
+      const sumPrice = document.getElementById('sumPrice');
+
+      // panel elements
+      const panel = document.getElementById('orderPanel');
+      const panelBackdrop = document.getElementById('panelBackdrop');
+      const closePanelBtn = document.getElementById('closePanelBtn');
+      const panelName = document.getElementById('panelName');
+      const panelCompany = document.getElementById('panelCompany');
+      const panelPhone = document.getElementById('panelPhone');
+      const panelProduct = document.getElementById('panelProduct');
+      const panelQty = document.getElementById('panelQty');
+      const panelDate = document.getElementById('panelDate');
+      const panelNotes = document.getElementById('panelNotes');
+      const panelPrice = document.getElementById('panelPrice');
+      const panelEditBtn = document.getElementById('panelEditBtn');
+      const panelSendBtn = document.getElementById('panelSendBtn');
+
+      // back-to-top
+      const backBtn = document.getElementById('backToTop');
+      const pageTitle = document.getElementById('title');
+
+      // prices
+      const PRICES = {
+        'Galleta de Mantequilla': 3000,
+        'Galleta Chocolate Intenso': 3200,
+        'Galleta Avena y Miel': 3500,
+        'Caja Corporativa 50+': 140000
+      };
+
+      // set min date to today
+      (function setMinDate(){
+        const d = new Date();
+        dateEl.min = d.toISOString().split('T')[0];
+      })();
+
+      // load saved contact info
+      function loadSavedInfo(){
+        try{
+          const saved = JSON.parse(localStorage.getItem('cookieduo_contact') || '{}');
+          if(saved.name) nameEl.value = saved.name;
+          if(saved.phone) phoneEl.value = saved.phone;
+          if(saved.company) companyEl.value = saved.company;
+        }catch(e){}
+        updateSummary();
+      }
+      loadSavedInfo();
+
+      // save local
+      saveBtn.addEventListener('click', ()=>{
+        const toSave = { name: nameEl.value.trim(), phone: phoneEl.value.trim(), company: companyEl.value.trim() };
+        localStorage.setItem('cookieduo_contact', JSON.stringify(toSave));
+        showToast('Información guardada localmente');
+      });
+
+      // update summary (inline + panel)
+      function updateSummary(){
+        const product = productEl.value || '—';
+        const qty = qtyEl.value || '—';
+        const date = dateEl.value ? new Date(dateEl.value).toLocaleDateString() : '—';
+        const phone = phoneEl.value || '—';
+        sumProduct.textContent = product;
+        sumQty.textContent = qty;
+        sumDate.textContent = date;
+        sumPhone.textContent = phone;
+
+        panelName.textContent = nameEl.value.trim() || '—';
+        panelCompany.textContent = companyEl.value.trim() || '—';
+        panelPhone.textContent = phone;
+        panelProduct.textContent = product;
+        panelQty.textContent = qty;
+        panelDate.textContent = date;
+        panelNotes.textContent = notesEl.value.trim() || '—';
+
+        const priceRef = PRICES[product] ? (PRICES[product] * (product === 'Caja Corporativa 50+' ? 1 : Number(qty || 1))) : null;
+        const priceText = priceRef ? ('$' + priceRef.toLocaleString()) : '—';
+        sumPrice.textContent = priceText;
+        panelPrice.textContent = priceText;
+      }
+
+      // wire inputs
+      [productEl, qtyEl, dateEl, phoneEl, nameEl, companyEl, notesEl].forEach(el => el.addEventListener('input', updateSummary));
+      updateSummary();
+
+      // toast helper
+      const toast = document.getElementById('toast');
+      function showToast(msg, ms=1400){
+        toast.textContent = msg;
+        toast.style.display = 'block';
+        toast.style.opacity = '1';
+        setTimeout(()=> {
+          try{ toast.animate([{opacity:1},{opacity:0}],{duration:260}); }catch(e){}
+          setTimeout(()=> toast.style.display='none',260);
+        }, ms);
+      }
+
+      // panel open/close
+      function openPanel(){
+        updateSummary();
+        panel.classList.add('open');
+        panelBackdrop.classList.add('show');
+        panel.setAttribute('aria-hidden','false');
+        panelBackdrop.setAttribute('aria-hidden','false');
+        openSummaryBtn.setAttribute('aria-expanded','true');
+        closePanelBtn.focus();
+        document.documentElement.style.overflow = 'hidden';
+      }
+      function closePanel(){
+        panel.classList.remove('open');
+        panelBackdrop.classList.remove('show');
+        panel.setAttribute('aria-hidden','true');
+        panelBackdrop.setAttribute('aria-hidden','true');
+        openSummaryBtn.setAttribute('aria-expanded','false');
+        document.documentElement.style.overflow = '';
+        openSummaryBtn.focus();
+      }
+
+      openSummaryBtn.addEventListener('click', openPanel);
+      closePanelBtn.addEventListener('click', closePanel);
+      panelBackdrop.addEventListener('click', closePanel);
+
+      // Esc closes
+      document.addEventListener('keydown', (e)=>{
+        if(e.key === 'Escape' && panel.classList.contains('open')) closePanel();
+      });
+
+      panelEditBtn.addEventListener('click', ()=>{
+        closePanel();
+        nameEl.focus();
+      });
+
+      panelSendBtn.addEventListener('click', ()=>{
+        form.requestSubmit ? form.requestSubmit() : form.submit();
+      });
+
+      // phone cleanup
+      function cleanPhone(ph){
+        if(!ph) return '';
+        return ph.replace(/[^\d+]/g,'');
+      }
+
+      // on submit, validate and open wa
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
+        if(!form.checkValidity()){
+          form.reportValidity();
+          return;
+        }
+
+        const name = nameEl.value.trim();
+        const company = companyEl.value.trim();
+        const phone = cleanPhone(phoneEl.value);
+        const product = productEl.value;
+        const qty = qtyEl.value.trim() || '1';
+        const date = dateEl.value ? new Date(dateEl.value).toLocaleDateString() : 'No especificada';
+        const notes = notesEl.value.trim();
+
+        if(!phone){
+          showToast('Por favor agrega tu número de WhatsApp (ej. +57 3011234567)');
+          phoneEl.focus();
+          return;
+        }
+
+        let lines = [];
+        lines.push(`*Pedido — Cookie Duo*`);
+        lines.push(`*Nombre:* ${name}`);
+        if(company) lines.push(`*Empresa:* ${company}`);
+        lines.push(`*WhatsApp del cliente:* ${phone}`);
+        lines.push(`*Producto:* ${product}`);
+        lines.push(`*Cantidad:* ${qty}`);
+        lines.push(`*Fecha entrega:* ${date}`);
+        if(notes) lines.push(`*Notas:* ${notes}`);
+        lines.push('');
+        lines.push('Por favor confirmar disponibilidad y precio final. Gracias!');
+
+        const message = encodeURIComponent(lines.join('\n'));
+        const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
+
+        window.open(waUrl, '_blank', 'noopener');
+
+        try{
+          const contact = { name, phone, company };
+          localStorage.setItem('cookieduo_contact', JSON.stringify(contact));
+        }catch(e){}
+
+        showToast('Se abrió WhatsApp con tu mensaje. Revisa y confirma el envío.');
+        if(panel.classList.contains('open')) closePanel();
+      });
+
+      // BACK TO TOP behavior with pop animation and click pulse
+      function showBackBtn(visible){
+        if(visible){
+          backBtn.classList.add('show');
+          backBtn.setAttribute('aria-hidden','false');
+        } else {
+          backBtn.classList.remove('show');
+          backBtn.setAttribute('aria-hidden','true');
+        }
+      }
+
+      // Show when scrolled down 180px
+      function onScroll(){
+        const s = window.scrollY || document.documentElement.scrollTop;
+        showBackBtn(s > 180);
+      }
+      window.addEventListener('scroll', throttle(onScroll, 120), {passive:true});
+      onScroll();
+
+      backBtn.addEventListener('click', (e)=>{
+        e.preventDefault();
+        // small click pulse
+        backBtn.style.animation = 'clickPulse 240ms ease';
+        setTimeout(()=> backBtn.style.animation = '', 260);
+
+        const topEl = document.getElementById('title') || document.body;
+        topEl.scrollIntoView({behavior:'smooth', block:'center'});
+        setTimeout(()=> {
+          try{ topEl.setAttribute('tabindex','-1'); topEl.focus({preventScroll:true}); }catch(err){}
+        }, 450);
+      });
+
+      // throttle util
+      function throttle(fn, wait){ let time=Date.now(); return function(){ if((time+wait-Date.now())<0){ fn(); time=Date.now(); } } }
+
+      // initial summary
+      updateSummary();
+    })();
+  </script>
+</body>
+</html>
+
+
